@@ -144,8 +144,9 @@ Taxonomies can be imported along with the other fields. You need to fill out the
 
 ## 🔗 Related Links
 
-* **[Storyblok Technologies Hub](https://www.storyblok.com/technologies?utm_source=github.com&utm_medium=referral&utm_campaign=wordpress-importe)**: we prepared technology hubs so that you can find selected beginner tutorials, videos, boilerplates, and even cheatsheets all in one place;
-* **[How To Migrate From WordPress To A Headless CMS](https://www.smashingmagazine.com/2021/07/wordpress-headless-cms-storyblok/)**: In this article, we will look at when it makes sense to migrate from a monolithic project to a headless setup and the benefits that come with it. In addition to a step-by-step guide on how to migrate WordPress to Storyblok Headless CMS, the problems that will arise during the process and how to deal with them.
+
+* **[How To Migrate From WordPress To A Headless CMS](https://www.smashingmagazine.com/2021/07/wordpress-headless-cms-storyblok/)**: In this article, we will look at when it makes sense to migrate from a monolithic project to a headless setup and the benefits that come with it. In addition to a step-by-step guide on how to migrate WordPress to Storyblok Headless CMS, the problems that will arise during the process and how to deal with them;  
+* **[Storyblok Technologies Hub](https://www.storyblok.com/technologies?utm_source=github.com&utm_medium=referral&utm_campaign=wordpress-importe)**: we prepared technology hubs so that you can find selected beginner tutorials, videos, boilerplates, and even cheatsheets all in one place.
 
 ## ℹ️ More Resources
 
