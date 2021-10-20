@@ -1,0 +1,1 @@
+export {default as Wp2Storyblok} from './src/migration.js'
