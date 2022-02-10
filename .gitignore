@@ -1,5 +1,8 @@
 node_modules/
-index2.js
-test.js
-test1.js
 temp
+.env
+.env.test
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
