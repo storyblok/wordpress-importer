@@ -152,7 +152,7 @@ Taxonomies can be imported along with the other fields. You need to fill out the
 
 ### Support
 
-* Bugs or Feature Requests? [Submit an issue](../../../issues/new);
+* Bugs or Feature Requests? [Submit an issue](../../issues/new);
 
 * Do you have questions about Storyblok or you need help? [Join our Discord Community](https://discord.gg/jKrbAMz).
 
