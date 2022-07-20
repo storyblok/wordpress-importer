@@ -40,7 +40,7 @@ export default class Wp {
         const req = await axios.get(query_endpoint)
         this.content_types[content_name] = this.content_types[content_name].concat(req.data)
         if (page_i === 1) {
-          page_max_i = req.headers['X-WP-TotalPages']
+          page_max_i = req.headers['X-WP-TotalPages'] || req.headers['x-wp-totalpages']
         }
       } catch (err) {
         console.log(`Error while fetching entries from WordPress: ${err.message}`)
