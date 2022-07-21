@@ -258,10 +258,10 @@ export default class Wp2Storyblok {
         break
       case 'multilink':
         value = {
-          url: value,
+          url: field_value,
           linktype: 'url',
           fieldtype: 'multilink',
-          cached_url: value
+          cached_url: field_value
         }
         break
       case 'datetime':
