@@ -4,6 +4,7 @@ import axios from 'axios'
 export default class Wp {
   constructor(settings) {
     this.endpoint = settings.endpoint
+    this.max_per_page = settings.max_per_page || 50
     this.content_types = {}
   }
 
@@ -21,9 +22,9 @@ export default class Wp {
   }
 
   /**
-   * Get all posts associated with a content type and 
+   * Get all posts associated with a content type and
    * stores them in an array in the class object
-   * @param {String} content_name 
+   * @param {String} content_name
    */
   async getPosts(content_name) {
     this.content_types[content_name] = []
@@ -35,7 +36,7 @@ export default class Wp {
         query_endpoint += '/wp/v2/'
         query_endpoint += content_name
         query_endpoint +=  this.endpoint.includes('?') ? '&' : '?'
-        query_endpoint += `per_page=50&page=${page_i}`
+        query_endpoint += `per_page=${this.max_per_page}&page=${page_i}`
 
         const req = await axios.get(query_endpoint)
         this.content_types[content_name] = this.content_types[content_name].concat(req.data)
