@@ -12,7 +12,8 @@ const settings_defaults = {
     enabled: true,
     types: ['png', 'jpg', 'jpeg', 'gif', 'png', 'svg', 'pdf'],
     restrict_domain: false
-  }
+  },
+  max_per_page: 50
 }
 
 export default class Wp2Storyblok {
@@ -22,7 +23,7 @@ export default class Wp2Storyblok {
     this.endpoint = endpoint
     this.settings = { ...settings_defaults, ...settings }
     // Storyblok and WP Interfaces
-    this.wp = new Wp({endpoint: this.endpoint})
+    this.wp = new Wp({endpoint: this.endpoint, max_per_page: this.settings.max_per_page})
     this.storyblok = new Storyblok({ token: settings.token, space_id: settings.space_id })
     // Data to migrate
     this.stories_to_migrate = []
