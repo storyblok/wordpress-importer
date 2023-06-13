@@ -21,7 +21,7 @@
 ## 🚀 Usage
 
 ### Prerequisets
-This script has been tested on WordPress v5 with API v2. WordPress REST API must be publicly available during the migration process as this script won't handle authentication.
+This script has been tested on WordPress v5 with API v2. The WordPress REST API can be publicly available or not, and if it's not, you can follow the [authentication handling step](#authentication-handling).
 On the <a href="https://www.storyblok.com" target="_blank">Storyblok</a> side you just need a space. In case the space is not an empty one, we recommend to test it before with a copy of the original space to make sure the migration process doesn't cause an issue to the existing content. 
 
 ### How to use
@@ -76,6 +76,70 @@ const wp2storyblok = new Wp2Storyblok('http://yoursite.com/wp-json', {
 })
 
 wp2storyblok.migrate()
+```
+
+### Authentication handling
+
+In cases that the WordPress REST API is not publicly available you can add the following step in order to set up the necessary authentication:
+
+-  Add the following piece in the file you're importing the script:
+
+```javascript
+//import axios
+import axios from 'axios';
+import { Wp2Storyblok } from './index.js';
+
+// add auth
+axios.interceptors.request.use((config) => {
+    config.headers['Authorization'] = `Basic ${Buffer.from('USERNAME:PASSWORD').toString('base64')}`;
+    return config;
+})
+
+const wp2storyblok = new Wp2Storyblok('http://yoursite.com/wp-json', {
+    token: 'storyblok-oauth-token',
+    space_id: 110836, // your storyblok space id
+    blocks_mapping: 
+    /**
+      *
+      * (...)
+      * 
+    */
+});
+```
+
+**WP Username and Application Password**
+
+- To get the 'WP Application Password': Login to your WordPress website as admin
+- Click on 'Users'
+- Click on your username to go to your profile
+- Go to the 'Application Passwords' section on the bottom of the page
+- Type the desired name (example: 'migration') on the 'New Application Password Name' field
+- Click on the 'Add New Application Password' button
+- Now the new password is generated you can use it in the `config.headers` (Example: `'user@example.com:xxxx xxxx xxxx xxxx xxxx xxxx'`)
+- More info: https://make.wordpress.org/core/2020/11/05/application-passwords-integration-guide/
+
+**WP REST API endpoint**
+- That's the WP REST API endpoint for your website. Usually is: `'<your-website>/wp-json'` (Example: `'https:my-website-domain/wp-json'`)
+
+**Region**
+
+- Make sure the server location of your Storyblok space is correctly named in the `storyblok.js` file.
+- Example: if the server location of your Storyblok space is in the US region so you need to specify the `region`:
+
+```javascript
+
+export default class Storyblok {
+  /** 
+   * 
+   * (...)
+   * 
+  */
+    this.client = new StoryblokClient({
+      oauthToken: settings.token,
+      region: 'us' // add the server location of your Storyblok space
+    })
+  }
+
 ```
 
 **Parameters**
