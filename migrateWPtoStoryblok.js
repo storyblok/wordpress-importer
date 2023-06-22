@@ -19,7 +19,7 @@ const wp2storyblok = new Wp2Storyblok('https://news.energysage.com/wp-json', {
       },
     },
     {
-      name: 'category', // Name of the post type in WP - different from smashing magazine recommended
+      name: 'categories', // Name of the post type in WP
       new_content_type: 'category', // Name of the Content Type in Storyblok
       // By default will be contained by a folder called Category (change it in the Permalinks option in WP)
       schema_mapping: {
@@ -30,7 +30,7 @@ const wp2storyblok = new Wp2Storyblok('https://news.energysage.com/wp-json', {
       },
     },
     {
-      name: 'author',
+      name: 'users',
       new_content_type: 'author',
       schema_mapping: {
         "first_name": "first_name",

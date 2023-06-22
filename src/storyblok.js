@@ -14,7 +14,8 @@ export default class Storyblok {
     this.assets_retries = {}
     this.retries_limit = 4
     this.client = new StoryblokClient({
-      oauthToken: settings.token
+      oauthToken: settings.token,
+      region: process.env.STORYBLOK_REGION,
     })
   }
 
