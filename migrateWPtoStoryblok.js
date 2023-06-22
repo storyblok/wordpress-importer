@@ -5,19 +5,19 @@ const wp2storyblok = new Wp2Storyblok('https://news.energysage.com/wp-json', {
   token: process.env.STORYBLOK_OAUTH_TOKEN, // My Account > Personal access tokens
   space_id: process.env.STORYBLOK_SPACE_ID, // Settings
   content_types: [
-    {
-      name: 'posts', // Post type name in WP
-      new_content_type: 'post', // Content Type name in Storyblok
-      folder: 'posts', // Destination folder name in Storyblok
-      schema_mapping: {
-        "date": "first_published_at",
-        "title": "name",
-        "slug": "slug",
-        "_links.wp:featuredmedia.0": "content.featured_image",
-        "excerpt": "content.excerpt",
-        "content": "content.content",
-      },
-    },
+    // {
+    //   name: 'posts', // Post type name in WP
+    //   new_content_type: 'post', // Content Type name in Storyblok
+    //   folder: 'posts', // Destination folder name in Storyblok
+    //   schema_mapping: {
+    //     "date": "first_published_at",
+    //     "title": "name",
+    //     "slug": "slug",
+    //     "_links.wp:featuredmedia.0": "content.featured_image",
+    //     "excerpt": "content.excerpt",
+    //     "content": "content.content",
+    //   },
+    // },
     {
       name: 'categories', // Name of the post type in WP
       new_content_type: 'category', // Name of the Content Type in Storyblok
@@ -33,10 +33,9 @@ const wp2storyblok = new Wp2Storyblok('https://news.energysage.com/wp-json', {
       name: 'users',
       new_content_type: 'author',
       schema_mapping: {
-        "first_name": "first_name",
-        "last_name": "last_name",
-        "email": "email",
-        "biographical_info": "biographical_info",
+        "name": "name",
+        "slug": "slug",
+        "description": "content.description",
       },
     },
   ]

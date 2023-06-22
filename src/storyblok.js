@@ -263,7 +263,7 @@ export default class Storyblok {
         const req = await this.client.post(`spaces/${this.space_id}/stories`, { story: stories[i] })
         created_stories.push(req.data.story)
       } catch (err) {
-        console.log(`Could not create story ${stories[i].name}`)
+        console.log(`Could not create story ${stories[i].name}: ${JSON.stringify(err)}`)
       }
     }
     return created_stories
