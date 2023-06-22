@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "migrate": "node --max-old-space-size=8192 ./migrateWPtoStoryblok.js"
+    "migrate": "node --max-old-space-size=65536 ./migrateWPtoStoryblok.js"
   },
   "author": "",
   "license": "ISC",
