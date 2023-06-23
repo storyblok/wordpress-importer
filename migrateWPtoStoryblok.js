@@ -1,7 +1,7 @@
 import { Wp2Storyblok } from './index.js'
 import 'dotenv/config'
 
-const wp2storyblok = new Wp2Storyblok('https://news.energysage.com/wp-json', {
+const wp2storyblok = new Wp2Storyblok(process.env.WP_ENDPOINT, {
   token: process.env.STORYBLOK_OAUTH_TOKEN, // My Account > Personal access tokens
   space_id: process.env.STORYBLOK_SPACE_ID, // Settings
   content_types: [
