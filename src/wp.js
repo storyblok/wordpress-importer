@@ -35,13 +35,13 @@ export default class Wp {
         query_endpoint += '/wp/v2/'
         query_endpoint += content_name
         query_endpoint +=  this.endpoint.includes('?') ? '&' : '?'
-        query_endpoint += `per_page=50&page=${page_i}`
+        query_endpoint += `per_page=25&page=${page_i}`
 
         const req = await axios.get(query_endpoint)
         this.content_types[content_name] = this.content_types[content_name].concat(req.data)
-        if (page_i === 1) {
-          page_max_i = req.headers['X-WP-TotalPages'] || req.headers['x-wp-totalpages']
-        }
+        // if (page_i === 1) {
+        //   page_max_i = req.headers['X-WP-TotalPages'] || req.headers['x-wp-totalpages']
+        // }
       } catch (err) {
         console.log(`Error while fetching entries from WordPress: ${err.message}`)
       }

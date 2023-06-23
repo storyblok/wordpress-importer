@@ -9,11 +9,20 @@ const wp2storyblok = new Wp2Storyblok('https://news.energysage.com/wp-json', {
       name: 'posts', // Post type name in WP
       new_content_type: 'post', // Content Type name in Storyblok
       folder: 'posts', // Destination folder name in Storyblok
+      taxonomies: [
+        {
+          name: 'categories',
+          field: 'categories',
+          type: 'relationship',
+        },
+      ],
       schema_mapping: {
         "date": "first_published_at",
         "title": "name",
         "slug": "slug",
         "_links.wp:featuredmedia.0": "content.featured_image",
+        // "_links.author.0": "content.author",
+        "categories": "content.categories",
         "excerpt": "content.excerpt",
         "content": "content.content",
       },
