@@ -4,6 +4,22 @@ import 'dotenv/config'
 const wp2storyblok = new Wp2Storyblok(process.env.WP_ENDPOINT, {
   token: process.env.STORYBLOK_OAUTH_TOKEN, // My Account > Personal access tokens
   space_id: process.env.STORYBLOK_SPACE_ID, // Settings
+  blocks_mapping: [
+    {
+      name: 'core/paragraph',
+      new_block_name: 'richText',
+      schema_mapping: {
+        'attrs.content': 'content',
+      },
+    },
+    {
+      name: 'core/image',
+      new_block_name: 'image',
+      schema_mapping: {
+        'attrs.url': 'image',
+      },
+    }
+  ],
   content_types: [
     {
       name: 'posts', // Post type name in WP
@@ -29,7 +45,7 @@ const wp2storyblok = new Wp2Storyblok(process.env.WP_ENDPOINT, {
         "author": "content.author",
         "categories": "content.categories",
         "excerpt": "content.excerpt",
-        "content": "content.content",
+        "block_data": "content.body_items",
       },
     },
     {
