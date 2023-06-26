@@ -13,6 +13,13 @@ const wp2storyblok = new Wp2Storyblok(process.env.WP_ENDPOINT, {
       },
     },
     {
+      name: 'core/list',
+      new_block_name: 'richText',
+      schema_mapping: {
+        'rendered': 'content',
+      },
+    },
+    {
       name: 'core/image',
       new_block_name: 'image',
       schema_mapping: {
