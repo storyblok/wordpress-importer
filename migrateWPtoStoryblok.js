@@ -18,7 +18,22 @@ const wp2storyblok = new Wp2Storyblok(process.env.WP_ENDPOINT, {
       schema_mapping: {
         'attrs.url': 'image',
       },
-    }
+    },
+    {
+      name: 'core/group',
+      new_block_name: 'group',
+      schema_mapping: {
+        'innerBlocks': 'bodyItems',
+      },
+    },
+    {
+      name: 'core/heading',
+      new_block_name: 'heading',
+      schema_mapping: {
+        'attrs.level': 'level',
+        'attrs.content': 'content',
+      },
+    },
   ],
   content_types: [
     {
