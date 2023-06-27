@@ -5,7 +5,7 @@ import * as fs from 'fs'
 import * as path from "path";
 
 // Handle the tablepress tables
-const tablePressJsonDirectoryPath = '/Users/nathaniel/Downloads/tablepress-export-2023-06-27-13-27-31-json';
+const tablePressJsonDirectoryPath = process.env.TABLEPRESS_EXPORT_DIRECTORY_PATH
 const files = fs.readdirSync(tablePressJsonDirectoryPath);
 let tableIdToBlockData = {}
 files.forEach((file) => {
