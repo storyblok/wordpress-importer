@@ -304,6 +304,9 @@ export default class Wp2Storyblok {
       let block_data = {}
       const block_mapping = this.settings.blocks_mapping?.find(b => b.name === block.blockName)
       if(block_mapping) {
+        if (block_mapping.ignore) {
+          continue
+        }
         // In case there's a custom mapping, it'll be used
         block_data.component = block_mapping.new_block_name || block_mapping.name
         const wp_block_data = await this.populateFields(block, block_data.component, block_mapping.schema_mapping)
