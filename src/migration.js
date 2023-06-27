@@ -15,6 +15,13 @@ const settings_defaults = {
   }
 }
 
+export const fallbackWpToStoryblok = (block) => {
+  return {
+    component: block.blockName,
+    ...block.attrs
+  }
+}
+
 export default class Wp2Storyblok {
   components = []
 
@@ -307,17 +314,19 @@ export default class Wp2Storyblok {
         if (block_mapping.ignore) {
           continue
         }
-        // In case there's a custom mapping, it'll be used
-        block_data.component = block_mapping.new_block_name || block_mapping.name
-        const wp_block_data = await this.populateFields(block, block_data.component, block_mapping.schema_mapping)
-        block_data = {...block_data, ...wp_block_data}
+        if (block_mapping.custom_handler) {
+          const wp_block_data = await block_mapping.custom_handler(block)
+          block_data = {...block_data, ...wp_block_data}
+        } else {
+          // In case there's a custom mapping, it'll be used
+          block_data.component = block_mapping.new_block_name || block_mapping.name
+          const wp_block_data = await this.populateFields(block, block_data.component, block_mapping.schema_mapping)
+          block_data = {...block_data, ...wp_block_data}
+        }
       } else {
         // In case no custom mapping is set, the block will be imported
         // as it is in WP
-        block_data = {
-          component: block.blockName,
-          ...block.attrs
-        }
+        block_data = fallbackWpToStoryblok(block)
       }
       blocks_data.push(block_data)
     }

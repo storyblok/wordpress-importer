@@ -1,5 +1,21 @@
 import { Wp2Storyblok } from './index.js'
+import { fallbackWpToStoryblok } from './src/migration.js'
 import 'dotenv/config'
+
+
+const handleShortcoderShortcode = async (block) => {
+  if (block.innerContent.length !== 1) {
+    console.error('handleShortcoderShortcode got unexpected innerContent length')
+  } else if (block.innerContent[0] === '\n[sc name="zip_cta_bottom" ][/sc]\n') {
+    return {
+      component: 'zipCtaBottom',
+    }
+  } else {
+    console.error(`handleShortcoderShortcode got unexpected shortcode type ${block.innerContent[0]}`)
+  }
+  return fallbackWpToStoryblok(block)
+}
+
 
 const wp2storyblok = new Wp2Storyblok(process.env.WP_ENDPOINT, {
   token: process.env.STORYBLOK_OAUTH_TOKEN, // My Account > Personal access tokens
@@ -45,6 +61,10 @@ const wp2storyblok = new Wp2Storyblok(process.env.WP_ENDPOINT, {
         'attrs.content': 'content',
       },
     },
+    {
+      name: 'shortcoder/shortcoder',
+      custom_handler: handleShortcoderShortcode,
+    }
   ],
   content_types: [
     {
