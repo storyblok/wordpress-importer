@@ -1,7 +1,35 @@
 import { Wp2Storyblok } from './index.js'
 import { fallbackWpToStoryblok } from './src/migration.js'
 import 'dotenv/config'
+import * as fs from 'fs'
+import * as path from "path";
 
+// Handle the tablepress tables
+const tablePressJsonDirectoryPath = '/Users/nathaniel/Downloads/tablepress-export-2023-06-27-13-27-31-json';
+const files = fs.readdirSync(tablePressJsonDirectoryPath);
+let tableIdToBlockData = {}
+files.forEach((file) => {
+    if (path.extname(file) === '.json') {
+        let filePath = path.join(tablePressJsonDirectoryPath, file);
+        const data = fs.readFileSync(filePath, 'utf8');
+        const jsonObj = JSON.parse(data);
+        let thead = undefined
+        let tbody = undefined
+        if (jsonObj.options.table_head) {
+          thead = jsonObj.data[0].map(colHead => ({value: colHead}))
+          tbody = jsonObj.data.slice(1).map(row => ({body: row.map(colItem => ({value: colItem}))}))
+        }
+        tableIdToBlockData[jsonObj.id] = {
+          component: 'table',
+          alternatingColors: jsonObj.options.alternating_row_colors,
+          content: {
+            fieldtype: 'table',
+            thead: thead,
+            tbody: tbody,
+          }
+        }
+    }
+});
 
 const handleShortcoderShortcode = async (block) => {
   if (block.innerContent.length !== 1) {
@@ -10,6 +38,9 @@ const handleShortcoderShortcode = async (block) => {
     return {
       component: 'zipCtaBottom',
     }
+  } else if (block.innerContent[0].startsWith('\n[table id=')) {
+    const tableId = block.innerContent[0].match(/table id=(\d+)/)[1]
+    return tableIdToBlockData[tableId]
   } else {
     console.error(`handleShortcoderShortcode got unexpected shortcode type ${block.innerContent[0]}`)
   }
