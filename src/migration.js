@@ -344,8 +344,19 @@ export default class Wp2Storyblok {
       const target_name = (typeof target === 'string') ? target : target.field
       if (target_name.indexOf('content.') === 0) {
         if(!output.content) output.content = {}
-        output.content[target_name.substring(8)] = field_value
+        const actual_target_name = target_name.substring(8)
+        if (Array.isArray(output.content[actual_target_name]) && Array.isArray(field_value)) {
+          output.content[actual_target_name].push(...field_value)
+        } else {
+          if (output.content[actual_target_name] !== undefined) {
+            console.warn(`output.content[${actual_target_name}] is being overwritten`)
+          }
+          output.content[actual_target_name] = field_value
+        }
       } else {
+        if (output[target_name] !== undefined) {
+          console.warn(`output[${target_name}] is being overwritten`)
+        }
         output[target_name] = field_value
       }
     }

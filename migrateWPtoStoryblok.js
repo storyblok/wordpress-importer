@@ -122,6 +122,11 @@ const wp2storyblok = new Wp2Storyblok(process.env.WP_ENDPOINT, {
                 "author": "content.author",
                 "categories": "content.categories",
                 "excerpt": "content.excerpt",
+                "date_gmt": {
+                    "field": "content.body_items",
+                    "component": "pocNestedBlockFromFlat",
+                    "component_field": "dateGmt",
+                },
                 "block_data": "content.body_items",
             },
         },
