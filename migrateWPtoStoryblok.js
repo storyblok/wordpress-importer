@@ -47,6 +47,9 @@ const handleShortcoderShortcode = async (block) => {
     return fallbackWpToStoryblok(block)
 }
 
+const getRealPath = (data) => {
+    return `WordpressMigrationPoc/${data.slug}/?preview=true`
+}
 
 const wp2storyblok = new Wp2Storyblok(process.env.WP_ENDPOINT, {
     token: process.env.STORYBLOK_OAUTH_TOKEN, // My Account > Personal access tokens
@@ -55,9 +58,9 @@ const wp2storyblok = new Wp2Storyblok(process.env.WP_ENDPOINT, {
         {
             name: 'core/paragraph',
             new_block_name: 'ArticleParagraph',
-            schema_mapping: {
-                'attrs.content': 'content',
-            },
+            schema_mapping: new Map([
+                ['attrs.content', 'content'],
+            ]),
         },
         {
             name: 'core/more',
@@ -66,31 +69,31 @@ const wp2storyblok = new Wp2Storyblok(process.env.WP_ENDPOINT, {
         {
             name: 'core/list',
             new_block_name: 'ArticleList',
-            schema_mapping: {
-                'rendered': 'content',
-            },
+            schema_mapping: new Map([
+                ['rendered', 'content'],
+            ]),
         },
         {
             name: 'core/image',
             new_block_name: 'ArticleImage',
-            schema_mapping: {
-                'attrs.url': 'image',
-            },
+            schema_mapping: new Map([
+                ['attrs.url', 'image'],
+            ]),
         },
         {
             name: 'core/group',
             new_block_name: 'ArticleGroup',
-            schema_mapping: {
-                'innerBlocks': 'body',
-            },
+            schema_mapping: new Map([
+                ['innerBlocks', 'body'],
+            ]),
         },
         {
             name: 'core/heading',
             new_block_name: 'ArticleHeading',
-            schema_mapping: {
-                'attrs.level': 'level',
-                'attrs.content': 'content',
-            },
+            schema_mapping: new Map([
+                ['attrs.level', 'level'],
+                ['attrs.content', 'content'],
+            ]),
         },
         {
             name: 'shortcoder/shortcoder',
@@ -114,10 +117,11 @@ const wp2storyblok = new Wp2Storyblok(process.env.WP_ENDPOINT, {
             //         type: 'relationship',
             //     },
             // ],
-            schema_mapping: {
-                "date": "first_published_at",
-                "title": "name",
-                "slug": "slug",
+            schema_mapping: new Map([
+                ["date", "first_published_at"],
+                ["title", "name"],
+                ["slug", "slug"],
+                [getRealPath, "path"],
                 // "_links.wp:featuredmedia.0": "content.featured_image",
                 // "author": "content.author",
                 // "categories": "content.categories",
@@ -127,8 +131,8 @@ const wp2storyblok = new Wp2Storyblok(process.env.WP_ENDPOINT, {
                 //     "component": "pocNestedBlockFromFlat",
                 //     "component_field": "dateGmt",
                 // },
-                "block_data": "content.body",
-            },
+                ["block_data", "content.body"],
+            ]),
         },
         // {
         //     name: 'categories', // Name of the post type in WP
