@@ -52,6 +52,24 @@ const getRealPath = (data) => {
     return `WordpressMigrationPoc/${data.slug}/?preview=true`
 }
 
+const getArticleEeat = (data) => {
+    return [{
+        component: 'ArticleEeat',
+        header: data.title.rendered,
+        canonicalUrl: {  // this isn't really working. Need to figure out the actual schema.
+            cached_url: data.link,
+        },
+        // It's annoying that default values have to be manually copied
+        copyTooltipSuccess: 'Link copied!',
+        copyWrittenBy: 'Written By:',
+        copyEditedBy: 'Edited By: {authorName}',
+        copyUpdated: 'Updated {updatedDate}',
+        copyPublished: 'Published {publishDate}',
+        copyViewFullProfile: 'View full profile',
+        copyReadTimeMinutes: '{num} min read',
+    }]
+}
+
 const wp2storyblok = new Wp2Storyblok(process.env.WP_ENDPOINT, {
     token: process.env.STORYBLOK_OAUTH_TOKEN, // My Account > Personal access tokens
     space_id: process.env.STORYBLOK_SPACE_ID, // Settings
@@ -132,6 +150,7 @@ const wp2storyblok = new Wp2Storyblok(process.env.WP_ENDPOINT, {
                 //     "component": "pocNestedBlockFromFlat",
                 //     "component_field": "dateGmt",
                 // },
+                [getArticleEeat, "content.ArticleEeat"],
                 ["block_data", "content.body"],
             ]),
         },

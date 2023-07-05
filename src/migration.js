@@ -336,16 +336,16 @@ export default class Wp2Storyblok {
   async populateFields(data, component_name, mapping, taxonomies) {
     let output = {}
     for (const [source, target] of mapping.entries()) {
-      let unformatted_field_value
+      let field_value
       if (typeof source === 'function') {
-        unformatted_field_value = await source(data)
+        field_value = await source(data)
       } else {
-        unformatted_field_value =  await this.wp.getFieldValue(data, source)
+        let unformatted_field_value =  await this.wp.getFieldValue(data, source)
+        if(taxonomies) {
+          unformatted_field_value = this.wp.filterTaxonomyValue(taxonomies, unformatted_field_value, source)
+        }
+        field_value = await this.formatFieldForStoryblok(unformatted_field_value, target, component_name)
       }
-      if(taxonomies) {
-        unformatted_field_value = this.wp.filterTaxonomyValue(taxonomies, unformatted_field_value, source)
-      }
-      const field_value = await this.formatFieldForStoryblok(unformatted_field_value, target, component_name)
       const target_name = (typeof target === 'string') ? target : target.field
       if (target_name.indexOf('content.') === 0) {
         if(!output.content) output.content = {}
