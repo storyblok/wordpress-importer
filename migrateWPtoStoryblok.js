@@ -20,9 +20,10 @@ files.forEach((file) => {
             tbody = jsonObj.data.slice(1).map(row => ({body: row.map(colItem => ({value: colItem}))}))
         }
         tableIdToBlockData[jsonObj.id] = {
-            component: 'ArticleTable',
-            alternatingColors: jsonObj.options.alternating_row_colors,
-            content: {
+            component: 'ArticleDataTable',
+            stickyHeader: '',
+            sortableHeaders: '',
+            table: {
                 fieldtype: 'table',
                 thead: thead,
                 tbody: tbody,
