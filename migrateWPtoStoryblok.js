@@ -141,7 +141,11 @@ const wp2storyblok = new Wp2Storyblok(process.env.WP_ENDPOINT, {
                 ["title", "name"],
                 ["slug", "slug"],
                 [getRealPath, "path"],
-                // "_links.wp:featuredmedia.0": "content.featured_image",
+                ["_links.wp:featuredmedia.0", {
+                    "field": "content.ArticleImage",
+                    "component": "ArticleImage",
+                    "component_field": "image",
+                }],
                 // "author": "content.author",
                 // "categories": "content.categories",
                 // "excerpt": "content.excerpt",
