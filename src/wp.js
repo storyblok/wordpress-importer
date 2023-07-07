@@ -4,6 +4,7 @@ import axios from 'axios'
 export default class Wp {
   constructor(settings) {
     this.endpoint = settings.endpoint
+    this.postSlugs = settings.postSlugs
     this.content_types = {}
   }
 
@@ -27,25 +28,43 @@ export default class Wp {
    */
   async getPosts(content_name) {
     this.content_types[content_name] = []
-    let page_max_i = 1
 
-    for (let page_i = 1; page_i <= page_max_i; page_i++) {
-      try {
-        let query_endpoint = this.endpoint
-        query_endpoint += '/wp/v2/'
-        query_endpoint += content_name
-        query_endpoint +=  this.endpoint.includes('?') ? '&' : '?'
-        query_endpoint += `per_page=25&page=${page_i}`
+    if (content_name === 'posts') {
+      for (const slug of this.postSlugs) {
+        try {
+          let query_endpoint = this.endpoint
+          query_endpoint += '/wp/v2/'
+          query_endpoint += content_name
+          query_endpoint +=  this.endpoint.includes('?') ? '&' : '?'
+          query_endpoint += `slug=${slug}`
 
-        const req = await axios.get(query_endpoint)
-        this.content_types[content_name] = this.content_types[content_name].concat(req.data)
-        // if (page_i === 1) {
-        //   page_max_i = req.headers['X-WP-TotalPages'] || req.headers['x-wp-totalpages']
-        // }
-      } catch (err) {
-        console.log(`Error while fetching entries from WordPress: ${err.message}`)
+          const req = await axios.get(query_endpoint)
+          this.content_types[content_name] = this.content_types[content_name].concat(req.data)
+        } catch (err) {
+          console.log(`Error while fetching entries from WordPress: ${err.message}`)
+        }
+      }
+    } else {
+      let page_max_i = 1
+      for (let page_i = 1; page_i <= page_max_i; page_i++) {
+        try {
+          let query_endpoint = this.endpoint
+          query_endpoint += '/wp/v2/'
+          query_endpoint += content_name
+          query_endpoint +=  this.endpoint.includes('?') ? '&' : '?'
+          query_endpoint += `per_page=25&page=${page_i}`
+
+          const req = await axios.get(query_endpoint)
+          this.content_types[content_name] = this.content_types[content_name].concat(req.data)
+          // if (page_i === 1) {
+          //   page_max_i = req.headers['X-WP-TotalPages'] || req.headers['x-wp-totalpages']
+          // }
+        } catch (err) {
+          console.log(`Error while fetching entries from WordPress: ${err.message}`)
+        }
       }
     }
+
     console.log(`Fetched all the entries of ${content_name} type`)
   }
 

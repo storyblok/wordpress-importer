@@ -25,11 +25,11 @@ export const fallbackWpToStoryblok = (block) => {
 export default class Wp2Storyblok {
   components = []
 
-  constructor(endpoint, settings = {}) {
+  constructor(endpoint, postSlugs, settings = {}) {
     this.endpoint = endpoint
     this.settings = { ...settings_defaults, ...settings }
     // Storyblok and WP Interfaces
-    this.wp = new Wp({endpoint: this.endpoint})
+    this.wp = new Wp({endpoint: this.endpoint, postSlugs: postSlugs})
     this.storyblok = new Storyblok({ token: settings.token, space_id: settings.space_id })
     // Data to migrate
     this.stories_to_migrate = []

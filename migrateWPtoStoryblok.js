@@ -2,7 +2,18 @@ import {Wp2Storyblok} from './index.js'
 import {fallbackWpToStoryblok} from './src/migration.js'
 import 'dotenv/config'
 import * as fs from 'fs'
-import * as path from "path";
+import { fileURLToPath } from 'url'
+import * as path from "path"
+
+// Load in the slugs of articles we want to migrate.
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const filePath = path.join(__dirname, 'escargatoire.txt');
+const data = fs.readFileSync(filePath, 'utf-8');
+const urls = data.split('\n');
+const slugs = urls.map(url => {
+  let parts = url.split('/');
+  return parts[parts.length - 2];
+});
 
 // Handle the tablepress tables
 const tablePressJsonDirectoryPath = process.env.TABLEPRESS_EXPORT_DIRECTORY_PATH
@@ -75,7 +86,7 @@ const getArticleEeat = (data) => {
     }]
 }
 
-const wp2storyblok = new Wp2Storyblok(process.env.WP_ENDPOINT, {
+const wp2storyblok = new Wp2Storyblok(process.env.WP_ENDPOINT, slugs, {
     token: process.env.STORYBLOK_OAUTH_TOKEN, // My Account > Personal access tokens
     space_id: process.env.STORYBLOK_SPACE_ID, // Settings
     blocks_mapping: [
