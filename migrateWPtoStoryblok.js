@@ -49,15 +49,20 @@ const handleShortcoderShortcode = async (block) => {
 }
 
 const getRealPath = (data) => {
-    return `WordpressMigrationPoc/${data.slug}/?preview=true`
+    return `blog/${data.slug}/?preview=true`
 }
 
 const getArticleEeat = (data) => {
+    const url = `https://www.energysage.com/blog/${data.slug}/`
     return [{
         component: 'ArticleEeat',
         header: data.title.rendered,
-        canonicalUrl: {  // this isn't really working. Need to figure out the actual schema.
-            cached_url: data.link,
+        canonicalUrl: {
+            id: '',
+            url: url,
+            linktype: 'url',
+            fieldtype: 'multilink',
+            cached_url: url,
         },
         // It's annoying that default values have to be manually copied
         copyTooltipSuccess: 'Link copied!',
@@ -123,7 +128,7 @@ const wp2storyblok = new Wp2Storyblok(process.env.WP_ENDPOINT, {
         {
             name: 'posts', // Post type name in WP
             new_content_type: 'ArticlePage001', // Content Type name in Storyblok
-            folder: '/articles/WordpressMigrationPoc/', // Destination folder name in Storyblok
+            folder: '/articles/blog/', // Destination folder name in Storyblok
             // taxonomies: [
             //     {
             //         name: 'categories',
