@@ -69,7 +69,11 @@ export default class Storyblok {
     const file_url = asset_req.request.res.responseUrl
     return new Promise((resolve) => {
       if (file_url.includes('https:')) {
-        https.get(file_url, (res) => {
+        https.get(file_url, {
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.5.1 Safari/605.1.15',
+          },
+        }, (res) => {
           res.pipe(file)
           file.on('finish', () => {
             file.close(() => resolve(true))
@@ -78,7 +82,11 @@ export default class Storyblok {
           resolve(false)
         })
       } else {
-        http.get(file_url, (res) => {
+        http.get(file_url, {
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.5.1 Safari/605.1.15',
+          },
+        }, (res) => {
           res.pipe(file)
           file.on('finish', () => {
             file.close(() => resolve(true))
