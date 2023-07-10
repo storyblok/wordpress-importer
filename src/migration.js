@@ -279,7 +279,7 @@ export default class Wp2Storyblok {
         value = []
         let accumulated_rich_text = null
         unmerged_value.forEach((current_value) => {
-          if (current_value.component === 'ArticleParagraph') { // SET HERE the component that is merged
+          if (current_value.component === process.env.RICH_TEXT_COMPONENT_NAME) {
             if (current_value.content.content) { // When false, we just skip the block because it's empty
               if (accumulated_rich_text === null) {
                 accumulated_rich_text = current_value
