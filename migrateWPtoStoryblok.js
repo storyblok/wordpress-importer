@@ -68,6 +68,7 @@ const getArticleEeat = (data) => {
     return [{
         component: 'ArticleEeat',
         header: data.title.rendered,
+        editorialGuidelines: process.env.EDITORIAL_GUIDELINES_UUID,
         canonicalUrl: {
             id: '',
             url: url,
