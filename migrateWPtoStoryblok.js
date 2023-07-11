@@ -63,11 +63,23 @@ const getRealPath = (data) => {
     return `blog/${data.slug}/?preview=true`
 }
 
-const getArticleEeat = (data) => {
+const getArticleEeat = async (data) => {
     const url = `https://www.energysage.com/blog/${data.slug}/`
+    const authorOldUrl = data.yoast_head_json.schema['@graph'].find(t => t['@type'] === 'Person').url
+    let authorUuid = null
+    if (authorOldUrl === 'https://news.energysage.com/author/guest-contributor/') {
+        const res = await wp2storyblok.storyblok.client.get(`spaces/${wp2storyblok.storyblok.space_id}/stories`, {
+          by_slugs: `*/${'emily-walker'}`, // todo mismatched, just for testing
+          content_type: 'AuthorPage',
+        })
+        if(res.data.stories?.length) {
+           authorUuid = res.data.stories[0].uuid
+        }
+    }
     return [{
         component: 'ArticleEeat',
         header: data.title.rendered,
+        authors: authorUuid ? [authorUuid] : undefined,
         editorialGuidelines: process.env.EDITORIAL_GUIDELINES_UUID,
         canonicalUrl: {
             id: '',
@@ -137,6 +149,15 @@ const wp2storyblok = new Wp2Storyblok(process.env.WP_ENDPOINT, slugs, {
         }
     ],
     content_types: [
+        // {
+        //     name: 'users',
+        //     new_content_type: 'AuthorPage',
+        //     folder: '/authors/migration-sandbox/',
+        //     schema_mapping: new Map([
+        //         ["name", "name"],
+        //         ["slug", "slug"],
+        //     ]),
+        // },
         {
             name: 'posts', // Post type name in WP
             new_content_type: 'ArticlePage001', // Content Type name in Storyblok
@@ -184,15 +205,6 @@ const wp2storyblok = new Wp2Storyblok(process.env.WP_ENDPOINT, slugs, {
         //         "slug": "slug",
         //         "description": "content.description",
         //         "parent": "content.parent",
-        //     },
-        // },
-        // {
-        //     name: 'users',
-        //     new_content_type: 'author',
-        //     schema_mapping: {
-        //         "name": "name",
-        //         "slug": "slug",
-        //         "description": "content.description",
         //     },
         // },
     ]
