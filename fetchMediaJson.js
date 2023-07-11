@@ -17,6 +17,7 @@ for (let page_i = 1; page_i <= page_max_i; page_i++) {
 
 const dataAsMapping = listOfData.reduce((result, item) => {
     result[item.guid.rendered] = item
+    result[item.yoast_head_json.og_url] = item
     return result
 }, {})
 
