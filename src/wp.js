@@ -1,5 +1,6 @@
 import { getDescendantProp } from './utils.js'
 import axios from 'axios'
+import {convert} from "html-to-text";
 
 export default class Wp {
   constructor(settings) {
@@ -79,7 +80,7 @@ export default class Wp {
     if (typeof field_value === 'string') {
       return field_value
     } else if (typeof field_value === 'object' && field_value.rendered) {
-      return field_value.rendered
+      return convert(field_value.rendered)
     } else if (typeof field_value === 'object' && field_value.href) {
       const link = await axios.get(field_value.href)
       return link.data?.source_url

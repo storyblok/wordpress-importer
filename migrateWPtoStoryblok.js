@@ -5,6 +5,7 @@ import * as fs from 'fs'
 import { fileURLToPath } from 'url'
 import * as path from "path"
 import axios from "axios";
+import {convert} from "html-to-text";
 
 // Load in the slugs of articles we want to migrate.
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -113,7 +114,7 @@ const getArticleEeat = async (data) => {
     }
     return [{
         component: 'ArticleEeat',
-        header: data.title.rendered,
+        header: convert(data.title.rendered),
         authors: authorUuid ? [authorUuid] : undefined,
         editorialGuidelines: process.env.EDITORIAL_GUIDELINES_UUID,
         canonicalUrl: {
