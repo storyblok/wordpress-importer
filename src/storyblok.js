@@ -6,6 +6,8 @@ import { compareSlugs, getAssetData } from './utils.js'
 import async from 'async'
 import https from 'https'
 import http from 'http'
+import path from "path";
+import {fileURLToPath} from "url";
 
 export default class Storyblok {
   constructor(settings) {
@@ -17,6 +19,9 @@ export default class Storyblok {
       oauthToken: settings.token,
       region: process.env.STORYBLOK_REGION,
     })
+    const __dirname = path.dirname(fileURLToPath(import.meta.url));
+    const filePath = path.join(__dirname, "../media.json")
+    this.media_url_to_data = JSON.parse(fs.readFileSync(filePath).toString())
   }
 
   /**
@@ -111,7 +116,12 @@ export default class Storyblok {
         console.log(`Could not upload ASSET ${asset}`)
         return Promise.resolve({ success: false })
       }
-      let new_asset_payload = { filename: asset_data.filename }
+      const mediaData = this.media_url_to_data[asset]
+      let new_asset_payload = {
+        filename: asset_data.filename,
+        alt: mediaData.alt_text,
+        title: mediaData.title.rendered,
+      }
       const new_asset_request = await this.client.post(`spaces/${this.space_id}/assets`, new_asset_payload)
       if (new_asset_request.status != 200) {
         return Promise.resolve({ success: false })
