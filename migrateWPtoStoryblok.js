@@ -15,6 +15,17 @@ const slugs = urls.map(url => {
   return parts[parts.length - 2];
 });
 
+// Load in the author mapping
+const authorFilePath = path.join(__dirname, 'author_mapping.txt');
+const authorData = fs.readFileSync(authorFilePath, 'utf-8')
+const authorLines = authorData.split('\n')
+const authorMapping = authorLines.reduce((result, author) => {
+    const parts = author.split(' (')
+    const oldUrl = parts[0]
+    result[oldUrl] = parts[1].split(')')[0]
+    return result
+}, {})
+
 // Handle the tablepress tables
 const tablePressJsonDirectoryPath = process.env.TABLEPRESS_EXPORT_DIRECTORY_PATH
 const files = fs.readdirSync(tablePressJsonDirectoryPath);
@@ -63,18 +74,26 @@ const getRealPath = (data) => {
     return `blog/${data.slug}/?preview=true`
 }
 
+const newAuthorSlugToUuid = new Map()
+
 const getArticleEeat = async (data) => {
     const url = `https://www.energysage.com/blog/${data.slug}/`
     const authorOldUrl = data.yoast_head_json.schema['@graph'].find(t => t['@type'] === 'Person').url
-    let authorUuid = null
-    if (authorOldUrl === 'https://news.energysage.com/author/guest-contributor/') {
+    const authorNewSlug = authorMapping[authorOldUrl]
+    let authorUuid
+    if (newAuthorSlugToUuid.has(authorNewSlug)) {
+        authorUuid = newAuthorSlugToUuid.get(authorNewSlug)
+    } else {
         const res = await wp2storyblok.storyblok.client.get(`spaces/${wp2storyblok.storyblok.space_id}/stories`, {
-          by_slugs: `*/${'emily-walker'}`, // todo mismatched, just for testing
-          content_type: 'AuthorPage',
+          by_slugs: `*/${authorNewSlug}`,
+          content_type: 'AuthorStub',
         })
         if(res.data.stories?.length) {
-           authorUuid = res.data.stories[0].uuid
+            authorUuid = res.data.stories[0].uuid
+        } else {
+            authorUuid = null
         }
+        newAuthorSlugToUuid.set(authorNewSlug, authorUuid)
     }
     return [{
         component: 'ArticleEeat',
