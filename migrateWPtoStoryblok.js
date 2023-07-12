@@ -56,18 +56,18 @@ files.forEach((file) => {
     }
 });
 
-const handleShortcoderShortcode = async (block) => {
+const handleShortcode = async (block) => {
     if (block.innerContent.length !== 1) {
-        console.error('handleShortcoderShortcode got unexpected innerContent length')
-    } else if (block.innerContent[0] === '\n[sc name="zip_cta_bottom" ][/sc]\n') {
+        console.error('handleShortcode got unexpected innerContent length')
+    } else if (block.innerContent[0].includes("zip_cta_bottom")) {
         return {
             component: 'ArticleZipCtaBottom',
         }
-    } else if (block.innerContent[0].startsWith('\n[table id=')) {
+    } else if (block.innerContent[0].includes('[table id=')) {
         const tableId = block.innerContent[0].match(/table id=(\d+)/)[1]
         return tableIdToBlockData[tableId]
     } else {
-        console.error(`handleShortcoderShortcode got unexpected shortcode type ${block.innerContent[0]}`)
+        console.error(`handleShortcode got unexpected shortcode type ${block.innerContent[0]}`)
     }
     return fallbackWpToStoryblok(block)
 }
@@ -184,8 +184,12 @@ const wp2storyblok = new Wp2Storyblok(process.env.WP_ENDPOINT, slugs, {
         },
         {
             name: 'shortcoder/shortcoder',
-            custom_handler: handleShortcoderShortcode,
-        }
+            custom_handler: handleShortcode,
+        },
+        {
+            name: 'core/shortcode',
+            custom_handler: handleShortcode,
+        },
     ],
     content_types: [
         // {
