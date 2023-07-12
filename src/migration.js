@@ -351,6 +351,7 @@ export default class Wp2Storyblok {
       } else {
         // In case no custom mapping is set, the block will be imported
         // as it is in WP
+        console.error(`No mapping defined for block ${block.blockName}`)
         block_data = fallbackWpToStoryblok(block)
       }
       blocks_data.push(block_data)
