@@ -102,10 +102,13 @@ const getArticleEeat = async (data) => {
         authorUuid = newAuthorSlugToUuid.get(authorNewSlug)
     } else {
         const res = await wp2storyblok.storyblok.client.get(`spaces/${wp2storyblok.storyblok.space_id}/stories`, {
-          by_slugs: `*/${authorNewSlug}`,
+          by_slugs: `author-stubs/${authorNewSlug}`,
           content_type: 'AuthorStub',
         })
         if(res.data.stories?.length) {
+            if (res.data.stories.length !== 1) {
+                console.error(`Unexpectedly got more than one author for ${data.slug}: ${res.data.stories}`)
+            }
             authorUuid = res.data.stories[0].uuid
         } else {
             authorUuid = null
