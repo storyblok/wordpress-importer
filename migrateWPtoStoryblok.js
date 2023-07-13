@@ -59,10 +59,6 @@ files.forEach((file) => {
 const handleShortcode = async (block) => {
     if (block.innerContent.length !== 1) {
         console.error('handleShortcode got unexpected innerContent length')
-    } else if (block.innerContent[0].includes("zip_cta_bottom")) {
-        return {
-            component: 'ArticleZipCtaBottom',
-        }
     } else if (block.innerContent[0].includes('[table id=')) {
         const tableId = block.innerContent[0].match(/table id=(\d+)/)[1]
         return tableIdToBlockData[tableId]
