@@ -5,6 +5,7 @@ import * as fs from 'fs'
 import { fileURLToPath } from 'url'
 import * as path from "path"
 import {convert} from "html-to-text";
+import axios from "axios";
 
 // Load in the slugs of articles we want to migrate.
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -119,6 +120,8 @@ const getArticleBreadcrumbList = (data) => {
 
 const newAuthorSlugToUuid = new Map()
 
+const categoryIdToSlug = new Map()
+
 const getArticleEeat = async (data) => {
     const url = `https://www.energysage.com/blog/${data.slug}/`
     const authorOldUrl = data.yoast_head_json.schema['@graph'].find(t => t['@type'] === 'Person').url
@@ -141,6 +144,22 @@ const getArticleEeat = async (data) => {
         }
         newAuthorSlugToUuid.set(authorNewSlug, authorUuid)
     }
+
+    let categorySlug = undefined
+    if (data.categories.length !== 1) {
+        console.error(`Article ${data.slug} has ${data.categories.length} categories`)
+    }
+    if (data.categories.length > 0) {
+        const categoryId = data.categories[0]
+        if (!categoryIdToSlug.has(categoryId)) {
+            const url = `${process.env.WP_ENDPOINT}/wp/v2/categories/${categoryId}/`
+            const req = await axios.get(url)
+            const slug = req.data.slug
+            categoryIdToSlug.set(categoryId, slug)
+        }
+        categorySlug = categoryIdToSlug.get(categoryId)
+    }
+
     return [{
         component: 'ArticleEeat',
         header: convert(data.title.rendered),
@@ -153,6 +172,7 @@ const getArticleEeat = async (data) => {
             fieldtype: 'multilink',
             cached_url: url,
         },
+        category: categorySlug,
         // It's annoying that default values have to be manually copied
         copyTooltipSuccess: 'Link copied!',
         copyWrittenBy: 'Written By:',
