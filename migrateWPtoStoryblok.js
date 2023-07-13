@@ -191,13 +191,14 @@ const wp2storyblok = new Wp2Storyblok(process.env.WP_ENDPOINT, slugs, {
                 ['attrs.content', 'content'],
             ]),
         },
-        {
-            name: 'core/separator',
-            new_block_name: 'ArticleParagraph',
-            schema_mapping: new Map([
-                ['rendered', 'content'],
-            ]),
-        },
+        // DISABLED BECAUSE OF BUG IN STORYBLOK, SEE CED-771
+        // {
+        //     name: 'core/separator',
+        //     new_block_name: 'ArticleParagraph',
+        //     schema_mapping: new Map([
+        //         ['rendered', 'content'],
+        //     ]),
+        // },
         {
             name: 'core/more',
             ignore: true,
