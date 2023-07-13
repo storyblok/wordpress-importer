@@ -24,9 +24,16 @@ const client = new StoryblokClient({
 })
 
 for (const tag of listOfTags) {
-    await client.post(`spaces/${process.env.STORYBLOK_SPACE_ID}/tags`, {
-        name: convert(tag.name),
-    })
+    try {
+        await client.post(`spaces/${process.env.STORYBLOK_SPACE_ID}/tags`, {
+            name: convert(tag.name),
+        })
+    } catch (e) {
+        if (e.response !== 'There is already a tag with this name') {
+            console.error(`Encountered error processing tag ${tag.name}:`)
+            console.error(e)
+        }
+    }
 }
 
 console.log('Completed')
