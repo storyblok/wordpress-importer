@@ -72,8 +72,12 @@ const handleShortcode = async (block) => {
     return fallbackWpToStoryblok(block)
 }
 
+const getPath = (data) => {
+    return `blog/${data.slug}/`
+}
+
 const getRealPath = (data) => {
-    return `blog/${data.slug}/?preview=true`
+    return `${getPath(data)}?preview=true`
 }
 
 const tagIdToName = new Map()
@@ -89,6 +93,44 @@ const getTags = async (data) => {
         tagNames.push(tagIdToName.get(tagId))
     }
     return tagNames
+}
+
+const getArticleBreadcrumbList = (data) => {
+    return [{
+        component: 'ArticleBreadcrumbList',
+        breadcrumbList: [
+            {
+                component: 'ArticleBreadcrumb',
+                name: 'Home',
+                url: {
+                    url: '/',
+                    linktype: 'url',
+                    fieldtype: 'multilink',
+                    cached_url: '/',
+                },
+            },
+            {
+                component: 'ArticleBreadcrumb',
+                name: 'Blog',
+                url: {
+                    url: '/blog/',
+                    linktype: 'url',
+                    fieldtype: 'multilink',
+                    cached_url: '/blog/',
+                },
+            },
+            {
+                component: 'ArticleBreadcrumb',
+                name: convert(data.title.rendered),
+                url: {
+                    url: `/${getPath(data)}`,
+                    linktype: 'url',
+                    fieldtype: 'multilink',
+                    cached_url: `/${getPath(data)}`,
+                }
+            },
+        ],
+    }]
 }
 
 const newAuthorSlugToUuid = new Map()
@@ -243,6 +285,7 @@ const wp2storyblok = new Wp2Storyblok(process.env.WP_ENDPOINT, slugs, {
                 //     "component": "pocNestedBlockFromFlat",
                 //     "component_field": "dateGmt",
                 // },
+                [getArticleBreadcrumbList, "content.ArticleBreadcrumbList"],
                 [getArticleEeat, "content.ArticleEeat"],
                 ["block_data", "content.body"],
             ]),
