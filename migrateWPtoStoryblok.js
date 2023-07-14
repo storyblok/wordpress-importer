@@ -236,9 +236,9 @@ const wp2storyblok = new Wp2Storyblok(process.env.WP_ENDPOINT, slugs, {
         },
         {
             name: 'core/image',
-            new_block_name: 'ArticleImage',
+            new_block_name: 'ArticleRichContent',
             schema_mapping: new Map([
-                ['attrs.url', 'image'],
+                ['rendered', 'content'],
             ]),
         },
         {
