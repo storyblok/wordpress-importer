@@ -1,11 +1,13 @@
 import {Wp2Storyblok} from './index.js'
-import {fallbackWpToStoryblok} from './src/migration.js'
+import {fallbackWpToStoryblok, turndownService} from './src/migration.js'
 import 'dotenv/config'
 import * as fs from 'fs'
 import { fileURLToPath } from 'url'
 import * as path from "path"
 import {convert} from "html-to-text";
 import axios from "axios";
+import pkg from "storyblok-markdown-richtext";
+const { markdownToRichtext } = pkg;
 
 // Load in the slugs of articles we want to migrate.
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -66,6 +68,20 @@ const handleShortcode = async (block) => {
         console.error(`handleShortcode got unexpected shortcode type ${block.innerContent[0]}`)
     }
     return fallbackWpToStoryblok(block)
+}
+
+const handleHeading = (block) => {
+    if (block.attrs.level <= 2) {
+        return {
+            component: 'ArticleH2',
+            text: block.attrs.content,
+        }
+    } else {
+        return {
+            component: 'ArticleRichContent',
+            content: markdownToRichtext(turndownService.turndown(block.innerHTML)),
+        }
+    }
 }
 
 const getPath = (data) => {
@@ -234,11 +250,7 @@ const wp2storyblok = new Wp2Storyblok(process.env.WP_ENDPOINT, slugs, {
         },
         {
             name: 'core/heading',
-            new_block_name: 'ArticleHeading',
-            schema_mapping: new Map([
-                ['attrs.level', 'level'],
-                ['attrs.content', 'content'],
-            ]),
+            custom_handler: handleHeading,
         },
         {
             name: 'shortcoder/shortcoder',

@@ -5,7 +5,7 @@ import { compareSlugs } from './utils.js'
 import Wp from './wp.js'
 const { markdownToRichtext } = pkg
 
-const turndownService = new TurndownService()
+export const turndownService = new TurndownService()
 
 const settings_defaults = {
   import_assets: {
