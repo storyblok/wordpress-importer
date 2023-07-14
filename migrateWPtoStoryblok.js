@@ -127,8 +127,8 @@ const getArticleEeat = async (data) => {
         authorUuid = newAuthorSlugToUuid.get(authorNewSlug)
     } else {
         const res = await wp2storyblok.storyblok.client.get(`spaces/${wp2storyblok.storyblok.space_id}/stories`, {
-          by_slugs: `author-stubs/${authorNewSlug}`,
-          content_type: 'AuthorStub',
+          by_slugs: `authors/${authorNewSlug}`,
+          content_type: 'AuthorPage',
         })
         if(res.data.stories?.length) {
             if (res.data.stories.length !== 1) {
