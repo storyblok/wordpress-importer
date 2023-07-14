@@ -181,6 +181,13 @@ const getArticleEeat = async (data) => {
     }]
 }
 
+const getArticleToc = (data) => {
+    return [{
+        component: 'ArticleTableOfContents',
+        header: 'Table of Contents',
+    }]
+}
+
 const wp2storyblok = new Wp2Storyblok(process.env.WP_ENDPOINT, slugs, {
     token: process.env.STORYBLOK_OAUTH_TOKEN, // My Account > Personal access tokens
     space_id: process.env.STORYBLOK_SPACE_ID, // Settings
@@ -288,6 +295,7 @@ const wp2storyblok = new Wp2Storyblok(process.env.WP_ENDPOINT, slugs, {
                 // },
                 [getArticleBreadcrumbList, "content.ArticleBreadcrumbList"],
                 [getArticleEeat, "content.ArticleEeat"],
+                [getArticleToc, "content.ArticleTableOfContents"],
                 ["block_data", "content.body"],
             ]),
         },
