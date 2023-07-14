@@ -141,19 +141,20 @@ const getArticleEeat = async (data) => {
         newAuthorSlugToUuid.set(authorNewSlug, authorUuid)
     }
 
-    let categorySlug = undefined
-    if (data.categories.length !== 1) {
-        console.error(`Article ${data.slug} has ${data.categories.length} categories`)
-    }
+    let categorySlugs = undefined
     if (data.categories.length > 0) {
-        const categoryId = data.categories[0]
-        if (!categoryIdToSlug.has(categoryId)) {
-            const url = `${process.env.WP_ENDPOINT}/wp/v2/categories/${categoryId}/`
-            const req = await axios.get(url)
-            const slug = req.data.slug
-            categoryIdToSlug.set(categoryId, slug)
+        const categorySlugsList = []
+        for (const categoryId of data.categories) {
+            if (!categoryIdToSlug.has(categoryId)) {
+                const url = `${process.env.WP_ENDPOINT}/wp/v2/categories/${categoryId}/`
+                const req = await axios.get(url)
+                const slug = req.data.slug
+                categoryIdToSlug.set(categoryId, slug)
+            }
+            const categorySlug = categoryIdToSlug.get(categoryId)
+            categorySlugsList.push(categorySlug)
         }
-        categorySlug = categoryIdToSlug.get(categoryId)
+        categorySlugs = categorySlugsList.join(', ')
     }
 
     return [{
@@ -168,7 +169,7 @@ const getArticleEeat = async (data) => {
             fieldtype: 'multilink',
             cached_url: url,
         },
-        category: categorySlug,
+        category: categorySlugs,
         // It's annoying that default values have to be manually copied
         copyTooltipSuccess: 'Link copied!',
         copyWrittenBy: 'Written By:',
