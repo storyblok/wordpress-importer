@@ -194,7 +194,7 @@ const wp2storyblok = new Wp2Storyblok(process.env.WP_ENDPOINT, slugs, {
     blocks_mapping: [
         {
             name: 'core/paragraph',
-            new_block_name: 'ArticleParagraph',
+            new_block_name: 'ArticleRichContent',
             schema_mapping: new Map([
                 ['attrs.content', 'content'],
             ]),
@@ -213,7 +213,7 @@ const wp2storyblok = new Wp2Storyblok(process.env.WP_ENDPOINT, slugs, {
         },
         {
             name: 'core/list',
-            new_block_name: 'ArticleList',
+            new_block_name: 'ArticleRichContent',
             schema_mapping: new Map([
                 ['rendered', 'content'],
             ]),
