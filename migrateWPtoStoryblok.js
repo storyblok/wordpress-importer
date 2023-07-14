@@ -250,31 +250,10 @@ const wp2storyblok = new Wp2Storyblok(process.env.WP_ENDPOINT, slugs, {
         },
     ],
     content_types: [
-        // {
-        //     name: 'users',
-        //     new_content_type: 'AuthorPage',
-        //     folder: '/authors/migration-sandbox/',
-        //     schema_mapping: new Map([
-        //         ["name", "name"],
-        //         ["slug", "slug"],
-        //     ]),
-        // },
         {
             name: 'posts', // Post type name in WP
             new_content_type: 'ArticlePage001', // Content Type name in Storyblok
             folder: '/articles/blog/', // Destination folder name in Storyblok
-            // taxonomies: [
-            //     {
-            //         name: 'categories',
-            //         field: 'categories',
-            //         type: 'relationship',
-            //     },
-            //     {
-            //         name: 'users',
-            //         field: 'author',
-            //         type: 'relationship',
-            //     },
-            // ],
             schema_mapping: new Map([
                 ["date", "first_published_at"],
                 ["title", "name"],
@@ -285,31 +264,12 @@ const wp2storyblok = new Wp2Storyblok(process.env.WP_ENDPOINT, slugs, {
                     "component": "ArticleImage",
                     "component_field": "image",
                 }],
-                // "author": "content.author",
-                // "categories": "content.categories",
-                // "excerpt": "content.excerpt",
-                // "date_gmt": {
-                //     "field": "content.body_items",
-                //     "component": "pocNestedBlockFromFlat",
-                //     "component_field": "dateGmt",
-                // },
                 [getArticleBreadcrumbList, "content.ArticleBreadcrumbList"],
                 [getArticleEeat, "content.ArticleEeat"],
                 [getArticleToc, "content.ArticleTableOfContents"],
                 ["block_data", "content.body"],
             ]),
         },
-        // {
-        //     name: 'categories', // Name of the post type in WP
-        //     new_content_type: 'category', // Name of the Content Type in Storyblok
-        //     // By default will be contained by a folder called Category (change it in the Permalinks option in WP)
-        //     schema_mapping: {
-        //         "name": "name",
-        //         "slug": "slug",
-        //         "description": "content.description",
-        //         "parent": "content.parent",
-        //     },
-        // },
     ]
 })
 
