@@ -4,10 +4,18 @@ import 'dotenv/config'
 import * as fs from 'fs'
 import { fileURLToPath } from 'url'
 import * as path from "path"
-import {convert} from "html-to-text";
+import {convert as rawConvert} from "html-to-text";
 import axios from "axios";
 import pkg from "storyblok-markdown-richtext";
 const { markdownToRichtext } = pkg;
+
+const convert = (input) => {
+    return rawConvert(input, {
+        selectors: [
+            { selector: 'a', options: { ignoreHref: true }},
+        ],
+    })
+}
 
 // Load in the slugs of articles we want to migrate.
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -42,8 +50,8 @@ files.forEach((file) => {
         let thead = undefined
         let tbody = undefined
         if (jsonObj.options.table_head) {
-            thead = jsonObj.data[0].map(colHead => ({value: colHead}))
-            tbody = jsonObj.data.slice(1).map(row => ({body: row.map(colItem => ({value: colItem}))}))
+            thead = jsonObj.data[0].map(colHead => ({value: convert(colHead)}))
+            tbody = jsonObj.data.slice(1).map(row => ({body: row.map(colItem => ({value: convert(colItem)}))}))
         }
         tableIdToBlockData[jsonObj.id] = {
             component: 'ArticleDataTable',
