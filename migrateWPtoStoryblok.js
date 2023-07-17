@@ -85,7 +85,18 @@ const handleHeading = (block) => {
 }
 
 const handleGroup = (block) => {
-    return wp2storyblok.formatBloksField(block.innerBlocks)
+    if (block.innerBlocks.length === 3 && block.innerBlocks[0].blockName === 'core/heading'
+        && block.innerBlocks[0].attrs.content.toLowerCase() === 'key takeaways'
+        && block.innerBlocks[1].blockName === 'core/separator' && block.innerBlocks[2].blockName === 'core/list') {
+
+        return {
+            component: 'ArticleTakeAways',
+            heading: block.innerBlocks[0].attrs.content,
+            content: markdownToRichtext(turndownService.turndown(block.innerBlocks[2].rendered)),
+        }
+    } else {
+        return wp2storyblok.formatBloksField(block.innerBlocks)
+    }
 }
 
 const getPath = (data) => {
