@@ -338,20 +338,22 @@ export default class Wp2Storyblok {
     let blocks_data = []
     for (let i = 0; i < blocks.length; i++) {
       const block = blocks[i]
-      let block_data = {}
+      let block_data
       const block_mapping = this.settings.blocks_mapping?.find(b => b.name === block.blockName)
       if(block_mapping) {
         if (block_mapping.ignore) {
           continue
         }
         if (block_mapping.custom_handler) {
-          const wp_block_data = await block_mapping.custom_handler(block)
-          block_data = {...block_data, ...wp_block_data}
+          block_data = await block_mapping.custom_handler(block)
         } else {
           // In case there's a custom mapping, it'll be used
-          block_data.component = block_mapping.new_block_name || block_mapping.name
-          const wp_block_data = await this.populateFields(block, block_data.component, block_mapping.schema_mapping)
-          block_data = {...block_data, ...wp_block_data}
+          const component = block_mapping.new_block_name || block_mapping.name
+          const wp_block_data = await this.populateFields(block, component, block_mapping.schema_mapping)
+          block_data = {
+            component: component,
+            ...wp_block_data,
+          }
         }
       } else {
         // In case no custom mapping is set, the block will be imported
@@ -359,7 +361,13 @@ export default class Wp2Storyblok {
         console.error(`No mapping defined for block ${block.blockName}`)
         block_data = fallbackWpToStoryblok(block)
       }
-      blocks_data.push(block_data)
+      if (Array.isArray(block_data)) {
+        blocks_data.push(...block_data)
+      } else if (typeof block_data === 'object') {
+        blocks_data.push(block_data)
+      } else {
+        console.error(`Block data is expected to be object or array, received ${block_data}`)
+      }
     }
     return blocks_data
   }

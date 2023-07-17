@@ -84,6 +84,10 @@ const handleHeading = (block) => {
     }
 }
 
+const handleGroup = (block) => {
+    return wp2storyblok.formatBloksField(block.innerBlocks)
+}
+
 const getPath = (data) => {
     return `blog/${data.slug}/`
 }
@@ -243,10 +247,7 @@ const wp2storyblok = new Wp2Storyblok(process.env.WP_ENDPOINT, slugs, {
         },
         {
             name: 'core/group',
-            new_block_name: 'ArticleGroup',
-            schema_mapping: new Map([
-                ['innerBlocks', 'body'],
-            ]),
+            custom_handler: handleGroup,
         },
         {
             name: 'core/heading',
