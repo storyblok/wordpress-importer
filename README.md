@@ -52,10 +52,18 @@ npm run migrate-tags
 
 ## Main migration
 
-First of all, create a file called `escargatoire.txt` in this
-directory, and put the list of URLs to migrate in there.
-There should be one URL per line.
-Slugs will be obtained from there by the script.
+First of all, obtain the Migration Plan sheet.
+Create a version of it that contains only the rows
+of the articles you want to migrate.
+It should have 4 columns, with no column headers:
+
+- Current page
+- Final URL destination
+- Final URL title tag
+- Final URL meta description
+
+Export this as a CSV, to a file in this directory
+called `migration_plan.csv`
 
 Then run the script.
 

@@ -8,6 +8,7 @@ import {convert as rawConvert} from "html-to-text";
 import axios from "axios";
 import pkg from "storyblok-markdown-richtext";
 const { markdownToRichtext } = pkg;
+import { parse } from 'csv-parse/sync';
 
 const convert = (input) => {
     return rawConvert(input, {
@@ -19,13 +20,31 @@ const convert = (input) => {
 
 // Load in the slugs of articles we want to migrate.
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const filePath = path.join(__dirname, 'escargatoire.txt');
+const filePath = path.join(__dirname, 'migration_plan.csv');
 const data = fs.readFileSync(filePath, 'utf-8');
-const urls = data.split('\n');
-const slugs = urls.map(url => {
-  let parts = url.split('/');
-  return parts[parts.length - 2];
-});
+const records = parse(data)
+const old_slug_to_data = records.map(record => {
+    const oldUrlParts = record[0].split('/')
+    const oldSlug = oldUrlParts[oldUrlParts.length - 2]
+    const newUrlParts = record[1].split('/')
+    const newSlug = newUrlParts[newUrlParts.length - 2]
+    const title = record[2].replace(' | EnergySage', '')
+    const description = record[3]
+    return [
+        oldSlug,
+        newSlug,
+        title,
+        description,
+    ]
+}).reduce((result, record) => {
+    result[record[0]] = {
+        newSlug: record[1],
+        title: record[2],
+        description: record[3],
+    }
+    return result
+}, {})
+const slugs = Object.keys(old_slug_to_data)
 
 // Load in the author mapping
 const authorFilePath = path.join(__dirname, 'author_mapping.txt');
@@ -107,6 +126,10 @@ const handleGroup = (block) => {
     }
 }
 
+const getTitle = (data) => {
+    return old_slug_to_data[data.slug].title
+}
+
 const getPath = (data) => {
     return `blog/${data.slug}/`
 }
@@ -116,10 +139,13 @@ const getRealPath = (data) => {
 }
 
 const getSeoData = (data) => {
+    const descriptionFromPlan = old_slug_to_data[data.slug].description
+    const description = (descriptionFromPlan && descriptionFromPlan !== '-') ? descriptionFromPlan
+        : data.yoast_head_json.description
     return {
         'plugin': 'seo_metatags',
-        'title': convert(data.title.rendered),
-        'description': data.yoast_head_json.description,
+        'title': old_slug_to_data[data.slug].title,
+        'description': description,
     }
 }
 
@@ -149,7 +175,7 @@ const getArticleBreadcrumbList = (data) => {
             },
             {
                 component: 'ArticleBreadcrumb',
-                name: convert(data.title.rendered),
+                name: old_slug_to_data[data.slug].title,
                 url: {
                     url: `/${getPath(data)}`,
                     linktype: 'url',
@@ -215,7 +241,7 @@ const getArticleEeat = async (data) => {
 
     return [{
         component: 'ArticleEeat',
-        header: convert(data.title.rendered),
+        header: old_slug_to_data[data.slug].title,
         authors: authorUuid ? [authorUuid] : undefined,
         editorialGuidelines: process.env.EDITORIAL_GUIDELINES_UUID,
         canonicalUrl: {
@@ -306,7 +332,7 @@ const wp2storyblok = new Wp2Storyblok(process.env.WP_ENDPOINT, slugs, {
             folder: '/articles/blog/', // Destination folder name in Storyblok
             schema_mapping: new Map([
                 ["date", "first_published_at"],
-                ["title", "name"],
+                [getTitle, "name"],
                 ["slug", "slug"],
                 [getRealPath, "path"],
                 [getSeoData, "content.seo"],

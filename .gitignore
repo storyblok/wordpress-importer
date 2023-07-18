@@ -8,5 +8,5 @@ temp
 .env.production.local
 .idea/
 .vscode/
-escargatoire.txt
+migration_plan.csv
 media.json
