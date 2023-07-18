@@ -115,6 +115,14 @@ const getRealPath = (data) => {
     return `${getPath(data)}?preview=true`
 }
 
+const getSeoData = (data) => {
+    return {
+        'plugin': 'seo_metatags',
+        'title': convert(data.title.rendered),
+        'description': data.yoast_head_json.description,
+    }
+}
+
 const getArticleBreadcrumbList = (data) => {
     return [{
         component: 'ArticleBreadcrumbList',
@@ -301,6 +309,7 @@ const wp2storyblok = new Wp2Storyblok(process.env.WP_ENDPOINT, slugs, {
                 ["title", "name"],
                 ["slug", "slug"],
                 [getRealPath, "path"],
+                [getSeoData, "content.seo"],
                 ["_links.wp:featuredmedia.0", {
                     "field": "content.articleImage",
                     "component": "ArticleImage",
