@@ -199,9 +199,11 @@ const getArticleEeat = async (data) => {
         categorySlugs = categorySlugsList.join(', ')
     }
 
-    // let lede = undefined
-    // if (data.block_data)
-    const lede = convert(data.excerpt.rendered)
+    let lede = undefined
+    const firstParagraph = data.block_data.find(el => el.blockName === 'core/paragraph')
+    if (firstParagraph) {
+        lede = convert(firstParagraph.attrs.content)
+    }
 
     return [{
         component: 'ArticleEeat',
