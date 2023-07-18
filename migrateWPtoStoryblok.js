@@ -155,6 +155,8 @@ const getArticleBreadcrumbList = (data) => {
 
 const newAuthorSlugToUuid = new Map()
 
+const missingAuthors = []
+
 const categoryIdToSlug = new Map()
 
 const getArticleEeat = async (data) => {
@@ -175,6 +177,7 @@ const getArticleEeat = async (data) => {
             }
             authorUuid = res.data.stories[0].uuid
         } else {
+            missingAuthors.push(authorNewSlug)
             authorUuid = null
         }
         newAuthorSlugToUuid.set(authorNewSlug, authorUuid)
@@ -306,5 +309,9 @@ const wp2storyblok = new Wp2Storyblok(process.env.WP_ENDPOINT, slugs, {
 })
 
 await wp2storyblok.migrate()
+
+if (missingAuthors.length > 0) {
+    console.warn(`Missing authors: ${missingAuthors}`)
+}
 
 console.log("Done!")
