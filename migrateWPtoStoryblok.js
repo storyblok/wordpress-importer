@@ -199,6 +199,10 @@ const getArticleEeat = async (data) => {
         categorySlugs = categorySlugsList.join(', ')
     }
 
+    // let lede = undefined
+    // if (data.block_data)
+    const lede = convert(data.excerpt.rendered)
+
     return [{
         component: 'ArticleEeat',
         header: convert(data.title.rendered),
@@ -212,6 +216,7 @@ const getArticleEeat = async (data) => {
             cached_url: url,
         },
         category: categorySlugs,
+        lede: lede,
         // It's annoying that default values have to be manually copied
         copyTooltipSuccess: 'Link copied!',
         copyWrittenBy: 'Written By:',

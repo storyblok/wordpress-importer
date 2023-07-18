@@ -120,6 +120,7 @@ export default class Storyblok {
       let new_asset_payload = {
         filename: asset_data.filename,
         alt: mediaData.alt_text,
+        size: `${mediaData.media_details.width}x${mediaData.media_details.height}`,
         title: mediaData.title.rendered,
       }
       const new_asset_request = await this.client.post(`spaces/${this.space_id}/assets`, new_asset_payload)
