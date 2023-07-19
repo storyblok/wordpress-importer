@@ -3,6 +3,7 @@ import pkg from 'storyblok-markdown-richtext'
 import Storyblok from './storyblok.js'
 import { compareSlugs } from './utils.js'
 import Wp from './wp.js'
+import {convert} from "html-to-text";
 const { markdownToRichtext } = pkg
 
 export const turndownService = new TurndownService()
@@ -16,8 +17,11 @@ const settings_defaults = {
 }
 
 export const fallbackWpToStoryblok = (block) => {
+  let shortcode = block.innerContent?.length > 0 && convert(block.innerContent[0])
   return {
-    component: block.blockName,
+    component: 'UnhandledBlockFromWordpress',
+    blockName: block.blockName,
+    shortcode: shortcode,
     ...block.attrs
   }
 }
