@@ -267,7 +267,7 @@ const getArticleEeat = async (data) => {
 const getArticleToc = (data) => {
     return [{
         component: 'ArticleTableOfContents',
-        header: 'Table of Contents',
+        header: 'Table of contents',
     }]
 }
 
