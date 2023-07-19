@@ -17,12 +17,9 @@ const settings_defaults = {
 }
 
 export const fallbackWpToStoryblok = (block) => {
-  let shortcode = block.innerContent?.length > 0 && convert(block.innerContent[0])
   return {
-    component: 'UnhandledBlockFromWordpress',
-    blockName: block.blockName,
-    shortcode: shortcode,
-    ...block.attrs
+    component: 'ArticleUnhandledBlockFromWordpress',
+    data: JSON.stringify(block, null, 2),
   }
 }
 
