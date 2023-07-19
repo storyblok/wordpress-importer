@@ -131,7 +131,7 @@ const getTitle = (data) => {
 }
 
 const getPath = (data) => {
-    return `blog/${data.slug}/`
+    return `/blog/${data.slug}/`
 }
 
 const getRealPath = (data) => {
@@ -329,7 +329,7 @@ const wp2storyblok = new Wp2Storyblok(process.env.WP_ENDPOINT, slugs, {
         {
             name: 'posts', // Post type name in WP
             new_content_type: 'ArticlePage001', // Content Type name in Storyblok
-            folder: '/articles/blog/', // Destination folder name in Storyblok
+            folder: '/blog/', // Destination folder name in Storyblok
             schema_mapping: new Map([
                 ["date", "first_published_at"],
                 [getTitle, "name"],
