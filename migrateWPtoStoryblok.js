@@ -119,7 +119,12 @@ const handleGroup = (block) => {
         return {
             component: 'ArticleTakeAways',
             heading: block.innerBlocks[0].attrs.content,
-            content: markdownToRichtext(turndownService.turndown(block.innerBlocks[2].rendered)),
+            content: [
+                {
+                    component: 'ArticleRichContent',
+                    content: markdownToRichtext(turndownService.turndown(block.innerBlocks[2].rendered)),
+                },
+            ],
         }
     } else {
         return wp2storyblok.formatBloksField(block.innerBlocks)
