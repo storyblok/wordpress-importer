@@ -101,7 +101,7 @@ const handleHeading = (block) => {
     if (block.attrs.level <= 2) {
         return {
             component: 'ArticleH2',
-            text: block.attrs.content,
+            text: convert(block.attrs.content),
         }
     } else {
         return {
