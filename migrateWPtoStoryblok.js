@@ -247,7 +247,7 @@ const getArticleEeat = async (data) => {
     return [{
         component: 'ArticleEeat',
         header: old_slug_to_data[data.slug].title,
-        authors: authorUuid ? [authorUuid] : undefined,
+        authors: authorUuid ? [authorUuid] : [],
         editorialGuidelines: process.env.EDITORIAL_GUIDELINES_UUID,
         canonicalUrl: {
             id: '',
