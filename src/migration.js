@@ -8,6 +8,27 @@ const { markdownToRichtext } = pkg
 
 export const turndownService = new TurndownService()
 
+function cleanAttribute (attribute) {
+  return attribute ? attribute.replace(/(\n+\s*)+/g, '\n') : ''
+}
+
+turndownService.addRule('inlineLink', {
+  filter: function (node, options) {
+    return (
+      options.linkStyle === 'inlined' &&
+      node.nodeName === 'A' &&
+      node.getAttribute('href')
+    )
+  },
+
+  replacement: function (content, node) {
+    var href = node.getAttribute('href');
+    var title = cleanAttribute(node.getAttribute('title'));
+    if (title) title = ' "' + title + '"';
+    return '[' + content + '](<' + href + ">" + title + ')'
+  }
+})
+
 const settings_defaults = {
   import_assets: {
     enabled: true,
