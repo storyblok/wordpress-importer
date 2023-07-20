@@ -260,7 +260,7 @@ const getArticleEeat = async (data) => {
         lede: lede,
         // It's annoying that default values have to be manually copied
         copyTooltipSuccess: 'Link copied!',
-        copyWrittenBy: 'Written By:',
+        copyWrittenBy: 'Written By: {authors}',
         copyEditedBy: 'Edited By: {authorName}',
         copyUpdated: 'Updated {updatedDate}',
         copyPublished: 'Published {publishDate}',
