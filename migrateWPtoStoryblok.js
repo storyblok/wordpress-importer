@@ -248,7 +248,8 @@ const getArticleEeat = async (data) => {
         component: 'ArticleEeat',
         header: old_slug_to_data[data.slug].title,
         authors: authorUuid ? [authorUuid] : [],
-        editorialGuidelines: process.env.EDITORIAL_GUIDELINES_UUID,
+        // This has been removed from Storyblok temporarily(?)
+        // editorialGuidelines: process.env.EDITORIAL_GUIDELINES_UUID,
         canonicalUrl: {
             id: '',
             url: url,
@@ -264,7 +265,6 @@ const getArticleEeat = async (data) => {
         copyEditedBy: 'Edited By: {authorName}',
         copyUpdated: 'Updated {updatedDate}',
         copyPublished: 'Published {publishDate}',
-        copyViewFullProfile: 'View full profile',
         copyReadTimeMinutes: '{num} min read',
     }]
 }
