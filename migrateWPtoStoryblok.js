@@ -250,6 +250,7 @@ const getArticleEeat = async (data) => {
         authors: authorUuid ? [authorUuid] : [],
         // This has been removed from Storyblok temporarily(?)
         // editorialGuidelines: process.env.EDITORIAL_GUIDELINES_UUID,
+        legacyUpdatedDate: `${(new Date(data.modified)).toISOString().slice(0, 10)} 00:00`,
         canonicalUrl: {
             id: '',
             url: url,
