@@ -51,7 +51,7 @@ export default class Wp2Storyblok {
     this.endpoint = endpoint
     this.settings = { ...settings_defaults, ...settings }
     // Storyblok and WP Interfaces
-    this.wp = new Wp({endpoint: this.endpoint, postSlugs: postSlugs})
+    this.wp = new Wp({endpoint: this.endpoint, postSlugs: postSlugs, import_assets: this.settings.import_assets})
     this.storyblok = new Storyblok({ token: settings.token, space_id: settings.space_id })
     // Data to migrate
     this.stories_to_migrate = []
@@ -98,6 +98,7 @@ export default class Wp2Storyblok {
       await this.wp.importTaxonomies(content_type.taxonomies)
       // Get all the posts for the content type
       await this.wp.getPosts(content_type.name)
+      this.wp.removeSizeInfoFromAssetUrlsInPosts(content_type.name)
       // Loop through the posts and get the content from WP in the right format
       // for your Storyblok project
       for (let j = 0; j < this.wp.content_types[content_type.name].length; j++) {

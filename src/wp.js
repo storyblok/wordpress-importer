@@ -6,6 +6,7 @@ export default class Wp {
   constructor(settings) {
     this.endpoint = settings.endpoint
     this.postSlugs = settings.postSlugs
+    this.import_assets = settings.import_assets
     this.content_types = {}
   }
 
@@ -19,6 +20,19 @@ export default class Wp {
       if(!this.content_types[taxonomy.name]) {
         await this.getPosts(taxonomy.name)
       }
+    }
+  }
+
+  removeSizeInfoFromAssetUrlsInPosts(content_name) {
+    const assets_regex = new RegExp(`(\\"((http)?s?:?(\\/?\\/[^"]*.(${this.import_assets.types.join('|')})))(\\\\)?")`, "g")
+    let regex_results = []
+    while ((regex_results = assets_regex.exec(JSON.stringify(this.content_types[content_name])))) {
+      const original_url = regex_results[2]
+      // The purpose of these incantations is to replace size-specified references in WP posts to ones that do not
+      // specify size. Otherwise, the assets won't be recognized later on, and they will appear in a smaller size
+      // that is inappropriate for being migrated to a full-width ArticleImage.
+      const new_url = original_url.replace(/(-\d+x\d+)(\.[a-zA-Z]+)/g, '$2')
+      this.content_types[content_name] = JSON.parse(JSON.stringify(this.content_types[content_name]).replaceAll(original_url, new_url))
     }
   }
 
