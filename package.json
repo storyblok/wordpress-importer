@@ -7,8 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "migrate": "node --max-old-space-size=65536 ./migrateWPtoStoryblok.js",
-    "fetch-media-json": "node ./fetchMediaJson.js",
-    "migrate-tags": "node ./migrateTags.js"
+    "fetch-media-json": "node ./fetchMediaJson.js"
   },
   "author": "",
   "license": "ISC",

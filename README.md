@@ -41,15 +41,6 @@ most are alt text and title.
 npm run fetch-media-json
 ```
 
-## Migrating tags
-
-We will migrate tags but not associate them to articles,
-based on the requirements specified by the content team.
-
-```
-npm run migrate-tags
-```
-
 ## Main migration
 
 First of all, obtain the Migration Plan sheet.

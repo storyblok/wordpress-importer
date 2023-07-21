@@ -204,6 +204,21 @@ const getArticleBreadcrumbList = (data) => {
     }]
 }
 
+const tagIdToName = new Map()
+
+const getTags = async (data) => {
+    const tagNames = []
+    for (const tagId of data.tags) {
+        if (!tagIdToName.has(tagId)) {
+            const url = `${wp2storyblok.wp.endpoint}/wp/v2/tags/${tagId}/`
+            const req = await axios.get(url)
+            tagIdToName.set(tagId, req.data.name)
+        }
+        tagNames.push(tagIdToName.get(tagId))
+    }
+    return tagNames.join(', ')
+}
+
 const newAuthorSlugToUuid = new Map()
 
 const missingAuthors = []
@@ -350,6 +365,7 @@ const wp2storyblok = new Wp2Storyblok(process.env.WP_ENDPOINT, slugs, {
                 [getTitle, "name"],
                 ["slug", "slug"],
                 [getRealPath, "path"],
+                [getTags, "content.legacyTags"],
                 [getSeoData, "content.seo"],
                 ["_links.wp:featuredmedia.0", {
                     "field": "content.articleImage",
