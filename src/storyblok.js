@@ -117,6 +117,10 @@ export default class Storyblok {
         return Promise.resolve({ success: false })
       }
       const mediaData = this.media_url_to_data[asset]
+      if (!mediaData) {
+        console.error(`Cannot find record of media file ${asset}`)
+        return Promise.resolve({ success: false })
+      }
       let new_asset_payload = {
         filename: asset_data.filename,
         alt: mediaData.alt_text,
