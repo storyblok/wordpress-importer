@@ -288,6 +288,20 @@ export default class Wp2Storyblok {
     return value
   }
 
+  getMediaValue(field_value) {
+    const mediaData = this.storyblok.media_url_to_data[field_value]
+    if (mediaData) {
+      return {
+        filename: field_value,
+        fieldtype: 'asset',
+        alt: mediaData.alt_text,
+        title: mediaData.title.rendered,
+      }
+    } else {
+      console.error(`Asset URL ${field_value} is not in media.json`)
+    }
+  }
+
   /**
    * Return the value of a WordPress field transformed to be sent
    * to Storyblok depending on the fieldtype
@@ -333,13 +347,7 @@ export default class Wp2Storyblok {
         value = await this.formatBloksField(field_value)
         break
       case 'asset':
-        const mediaData = this.storyblok.media_url_to_data[field_value]
-        value = {
-          filename: field_value,
-          fieldtype: 'asset',
-          alt: mediaData?.alt_text,
-          title: mediaData?.title.rendered,
-        }
+        value = this.getMediaValue(field_value)
         break
       default:
         value = field_value

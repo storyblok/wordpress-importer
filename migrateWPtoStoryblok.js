@@ -131,6 +131,18 @@ const handleGroup = (block) => {
     }
 }
 
+const handleImage = (block) => {
+    const maybeAsset = wp2storyblok.getMediaValue(block.attrs.url)
+    if (maybeAsset) {
+        return {
+            component: 'ArticleImage',
+            image: maybeAsset,
+        }
+    } else {
+        return fallbackWpToStoryblok(block)
+    }
+}
+
 const getTitle = (data) => {
     return old_slug_to_data[data.slug].title
 }
@@ -309,10 +321,7 @@ const wp2storyblok = new Wp2Storyblok(process.env.WP_ENDPOINT, slugs, {
         },
         {
             name: 'core/image',
-            new_block_name: 'ArticleImage',
-            schema_mapping: new Map([
-                ['attrs.url', 'image'],
-            ]),
+            custom_handler: handleImage,
         },
         {
             name: 'core/group',
