@@ -3,6 +3,8 @@
 This is a modified version of Storyblok's script to support
 our use cases.
 
+See [their original readme](README.storyblok.md) for more information.
+
 You will need to have `nodenv` installed, or manually use the
 Node.js version specified in [.node-version](.node-version).
 
