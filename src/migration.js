@@ -150,15 +150,9 @@ export default class Wp2Storyblok {
     const assets_regex = new RegExp(`(\\"((http)?s?:?(\\/?\\/[^"]*.(${this.settings.import_assets.types.join('|')})))(\\\\)?")`, "g")
     let regex_results = []
     while ((regex_results = assets_regex.exec(JSON.stringify(this.stories_to_migrate)))) {
-      const original_url = regex_results[2]
-      // The purpose of these incantations is to replace size-specified references in WP posts to ones that do not
-      // specify size. Otherwise, the assets won't be recognized later on, and they will appear in a smaller size
-      // that is inappropriate for being migrated to a full-width ArticleImage.
-      const new_url = original_url.replace(/(-\d+x\d+)(\.[a-zA-Z]+)/g, '$2')
-      this.stories_to_migrate = JSON.parse(JSON.stringify(this.stories_to_migrate).replaceAll(original_url, new_url))
-      if (!this.assets_to_migrate.find(asset => asset.original_url === new_url)) {
-        const full_url = new_url[0] === '/' ? `${this.settings.domain}${new_url}` : new_url
-        this.assets_to_migrate.push({ original_url: new_url, full_url })
+      if (!this.assets_to_migrate.find(asset => asset.original_url == regex_results[2])) {
+        const full_url = regex_results[2][0] == '/' ? `${this.settings.domain}${regex_results[2]}` : regex_results[2]
+        this.assets_to_migrate.push({ original_url: regex_results[2], full_url })
       }
     }
     this.migrated_assets = await this.storyblok.uploadAssets(this.assets_to_migrate.map(a => a.full_url))
