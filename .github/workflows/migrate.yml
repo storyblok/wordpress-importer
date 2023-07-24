@@ -1,0 +1,15 @@
+name: Migrate
+run-name: Migration started by ${{ github.actor }}
+on:
+  workflow_call:
+    inputs:
+      wp_endpoint:
+        description: 'The WordPress JSON endpoint that will be pulled from'
+        required: true
+        type: string
+jobs:
+  Migrate-WordPress-To-Storyblok:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: "Print some stuff"
+        run: echo Hello world! JSON endpoint: ${{ inputs.wp_endpoint }}
