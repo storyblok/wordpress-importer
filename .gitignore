@@ -10,3 +10,4 @@ temp
 .vscode/
 migration_plan.csv
 media.json
+tablepress_export/
