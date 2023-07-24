@@ -7,16 +7,21 @@ on:
         description: 'WordPress Base URL, no trailing slash'
         required: true
         type: string
+env:
+  WP_BASE_URL: ${{ inputs.wp_base_url }}
 jobs:
   Migrate-WordPress-To-Storyblok:
     runs-on: ubuntu-22.04
     steps:
       - name: Print some stuff
         run: |
-          echo "Hello world! JSON endpoint: ${{ inputs.wp_base_url }}"
+          echo "Hello world! JSON endpoint: $WP_BASE_URL"
       - name: Check out repository code
         uses: actions/checkout@v3
       - run: |
           node --version
       - run: |
           npm install
+      - name: Fetch TablePress export
+        run: |
+          npm run fetch-tablepress-tables
