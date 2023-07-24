@@ -7,7 +7,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "migrate": "node --max-old-space-size=65536 ./migrateWPtoStoryblok.js",
-    "fetch-media-json": "node ./fetchMediaJson.js"
+    "fetch-media-json": "node ./fetchMediaJson.js",
+    "fetch-tablepress-tables": "node ./fetchTablePressTables.js"
   },
   "author": "",
   "license": "ISC",
@@ -18,6 +19,7 @@
     "dotenv": "^16.3.1",
     "form-data": "^4.0.0",
     "html-to-text": "^9.0.5",
+    "puppeteer": "^20.9.0",
     "storyblok-js-client": "^5.10.6",
     "storyblok-markdown-richtext": "^1.0.3",
     "turndown": "^7.1.2"
