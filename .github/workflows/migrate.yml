@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       wp_endpoint:
-        description: 'The WordPress JSON endpoint that will be pulled from'
+        description: 'WordPress JSON endpoint'
         required: true
         type: string
 jobs:
@@ -14,3 +14,13 @@ jobs:
       - name: "Print some stuff"
         run: |
           echo "Hello world! JSON endpoint: ${{ inputs.wp_endpoint }}"
+      - name: "Check out repository code"
+        uses: actions/checkout@v3
+      - run: |
+          ls
+      - run: |
+          cd ${{ github.workspace }}
+      - run: |
+          ls
+      - run: |
+          ls ${{ github.workspace }}
