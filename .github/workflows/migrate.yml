@@ -14,13 +14,12 @@ jobs:
       - name: "Print some stuff"
         run: |
           echo "Hello world! JSON endpoint: ${{ inputs.wp_endpoint }}"
+      - name: "Install nodenv"
+        run: |
+          curl -fsSL https://github.com/nodenv/nodenv-installer/raw/HEAD/bin/nodenv-installer | bash
       - name: "Check out repository code"
         uses: actions/checkout@v3
       - run: |
           ls
       - run: |
-          cd ${{ github.workspace }}
-      - run: |
-          ls
-      - run: |
-          ls ${{ github.workspace }}
+          node --version
