@@ -58,7 +58,7 @@ const authorMapping = authorLines.reduce((result, author) => {
 }, {})
 
 // Handle the tablepress tables
-const tablePressJsonDirectoryPath = process.env.TABLEPRESS_EXPORT_DIRECTORY_PATH
+const tablePressJsonDirectoryPath = path.resolve('./tablepress_export')
 const files = fs.readdirSync(tablePressJsonDirectoryPath);
 let tableIdToBlockData = {}
 files.forEach((file) => {
@@ -254,7 +254,7 @@ const getArticleEeat = async (data) => {
         const categorySlugsList = []
         for (const categoryId of data.categories) {
             if (!categoryIdToSlug.has(categoryId)) {
-                const url = `${process.env.WP_ENDPOINT}/wp/v2/categories/${categoryId}/`
+                const url = `${process.env.WP_BASE_URL}/wp-json/wp/v2/categories/${categoryId}/`
                 const req = await axios.get(url)
                 const slug = req.data.slug
                 categoryIdToSlug.set(categoryId, slug)
@@ -304,7 +304,7 @@ const getArticleToc = (data) => {
     }]
 }
 
-const wp2storyblok = new Wp2Storyblok(process.env.WP_ENDPOINT, slugs, {
+const wp2storyblok = new Wp2Storyblok(`${process.env.WP_BASE_URL}/wp-json`, slugs, {
     token: process.env.STORYBLOK_OAUTH_TOKEN, // My Account > Personal access tokens
     space_id: process.env.STORYBLOK_SPACE_ID, // Settings
     blocks_mapping: [

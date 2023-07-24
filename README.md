@@ -24,11 +24,11 @@ The migration is split into several steps.
 
 ## Getting the TablePress export
 
-Go to our production WordPress admin -> TablePress -> Export.
-Choose "Select all" and choose the JSON format. Download and 
-extract the export file. Specify the location you extracted 
-it in `TABLEPRESS_EXPORT_DIRECTORY_PATH` of the [.env](.env)
-file.
+Run the script which uses Playwright to obtain the export from
+the TablePress section of the WordPress Admin.
+```
+npm run fetch-tablepress-tables
+```
 
 ## Fetching media info
 

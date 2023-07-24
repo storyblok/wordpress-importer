@@ -3,8 +3,8 @@ run-name: Migration started by ${{ github.actor }}
 on:
   workflow_dispatch:
     inputs:
-      wp_endpoint:
-        description: 'WordPress JSON endpoint'
+      wp_base_url:
+        description: 'WordPress Base URL, no trailing slash'
         required: true
         type: string
 jobs:
@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Print some stuff
         run: |
-          echo "Hello world! JSON endpoint: ${{ inputs.wp_endpoint }}"
+          echo "Hello world! JSON endpoint: ${{ inputs.wp_base_url }}"
       - name: Check out repository code
         uses: actions/checkout@v3
       - run: |
