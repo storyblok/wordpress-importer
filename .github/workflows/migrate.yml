@@ -12,4 +12,5 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: "Print some stuff"
-        run: echo Hello world! JSON endpoint: ${{ inputs.wp_endpoint }}
+        run: |
+          echo "Hello world! JSON endpoint: ${{ inputs.wp_endpoint }}"
