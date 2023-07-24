@@ -160,6 +160,12 @@ const getSeoData = (data) => {
     const descriptionFromPlan = old_slug_to_data[data.slug].description
     const description = (descriptionFromPlan && descriptionFromPlan !== '-') ? descriptionFromPlan
         : data.yoast_head_json.description
+    if (!title) {
+        console.warn(`Title is falsy for ${data.slug}`)
+    }
+    if (!description) {
+        console.warn(`Description is falsy for ${data.slug}`)
+    }
     return {
         'plugin': 'seo_metatags',
         'title': title,
