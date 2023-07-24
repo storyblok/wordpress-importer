@@ -14,18 +14,9 @@ jobs:
       - name: Print some stuff
         run: |
           echo "Hello world! JSON endpoint: ${{ inputs.wp_endpoint }}"
-      - name: Install nodenv
-        run: |
-          curl -fsSL https://github.com/nodenv/nodenv-installer/raw/HEAD/bin/nodenv-installer | bash
-      - name: Initialize nodenv
-        run: |
-          ~/.nodenv/bin/nodenv init
       - name: Check out repository code
         uses: actions/checkout@v3
       - run: |
           node --version
-      - name: Install specified node version
-        run: |
-          nodenv install
       - run: |
-          node --version
+          npm install
