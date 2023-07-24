@@ -1,4 +1,5 @@
 import puppeteer from 'puppeteer';
+import "dotenv/config"
 
 (async () => {
     // Launch the browser and open a new blank page
@@ -6,29 +7,19 @@ import puppeteer from 'puppeteer';
         headless: 'new',
     });
     const page = await browser.newPage();
-
-    // Navigate the page to a URL
-    await page.goto('https://developer.chrome.com/');
-
-    // Set screen size
     await page.setViewport({width: 1080, height: 1024});
 
-    // Type into search box
-    await page.type('.search-box__input', 'test');
+    // Log in
+    await page.goto(process.env.WP_ADMIN_LOGIN_URL)
+    await page.type('#user_login', process.env.WP_ADMIN_USERNAME)
+    await page.type('#user_pass', process.env.WP_ADMIN_PASSWORD)
+    await page.click('#wp-submit')
 
-    // Wait and click on first result
-    const searchResultSelector = '.search-box__link';
-    await page.waitForSelector(searchResultSelector);
-    await page.click(searchResultSelector);
-
-    // Locate the full title with a unique string
     const textSelector = await page.waitForSelector(
-        'text/We\'re meeting'
-    );
-    const fullTitle = await textSelector?.evaluate(el => el.textContent);
-
-    // Print the full title
-    console.log('The title of this blog post is "%s".', fullTitle);
+        'text/Your site has a critical'
+    )
+    const fullText = await textSelector?.evaluate(el => el.textContent)
+    console.log(fullText)
 
     await browser.close();
 })();
