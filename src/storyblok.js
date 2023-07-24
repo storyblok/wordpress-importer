@@ -210,6 +210,7 @@ export default class Storyblok {
         story: {
           name: folders[i].name,
           slug: folders[i].slug,
+          path: `/${folders[i].slug}/`,
           is_folder: true
         }
       }

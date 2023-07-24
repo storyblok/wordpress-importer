@@ -152,7 +152,7 @@ const getPath = (data) => {
 }
 
 const getRealPath = (data) => {
-    return `${getPath(data)}?preview=true`
+    return `${data.slug}/?preview=true`
 }
 
 const getSeoData = (data) => {
