@@ -156,13 +156,17 @@ const getRealPath = (data) => {
 }
 
 const getSeoData = (data) => {
+    const title = old_slug_to_data[data.slug].title
     const descriptionFromPlan = old_slug_to_data[data.slug].description
     const description = (descriptionFromPlan && descriptionFromPlan !== '-') ? descriptionFromPlan
         : data.yoast_head_json.description
     return {
         'plugin': 'seo_metatags',
-        'title': old_slug_to_data[data.slug].title,
+        'title': title,
         'description': description,
+        'og_title': title,
+        'og_description': description,
+        'og_image': data.yoast_head_json.og_image.map(entry => entry.url),
     }
 }
 
