@@ -11,15 +11,18 @@ jobs:
   Migrate-WordPress-To-Storyblok:
     runs-on: ubuntu-22.04
     steps:
-      - name: "Print some stuff"
+      - name: Print some stuff
         run: |
           echo "Hello world! JSON endpoint: ${{ inputs.wp_endpoint }}"
-      - name: "Install nodenv"
+      - name: Install nodenv
         run: |
           curl -fsSL https://github.com/nodenv/nodenv-installer/raw/HEAD/bin/nodenv-installer | bash
-      - name: "Check out repository code"
+      - name: Check out repository code
         uses: actions/checkout@v3
       - run: |
-          ls
+          node --version
+      - name: Install specified node version
+        run: |
+          nodenv install
       - run: |
           node --version
