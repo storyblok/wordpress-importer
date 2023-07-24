@@ -17,6 +17,9 @@ jobs:
       - name: Install nodenv
         run: |
           curl -fsSL https://github.com/nodenv/nodenv-installer/raw/HEAD/bin/nodenv-installer | bash
+      - name: Initialize nodenv
+        run: |
+          ~/.nodenv/bin/nodenv init
       - name: Check out repository code
         uses: actions/checkout@v3
       - run: |
