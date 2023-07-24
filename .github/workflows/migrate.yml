@@ -1,7 +1,7 @@
 name: Migrate
 run-name: Migration started by ${{ github.actor }}
 on:
-  workflow_call:
+  workflow_dispatch:
     inputs:
       wp_endpoint:
         description: 'The WordPress JSON endpoint that will be pulled from'
