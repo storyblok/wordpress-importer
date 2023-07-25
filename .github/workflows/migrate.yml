@@ -11,7 +11,6 @@ env:
   WP_ADMIN_PASSWORD: ${{ secrets.WP_ADMIN_PASSWORD }}
   RICH_TEXT_COMPONENT_NAME: ${{ secrets.RICH_TEXT_COMPONENT_NAME }}
   EDITORIAL_GUIDELINES_UUID: ${{ secrets.EDITORIAL_GUIDELINES_UUID }}
-  MIGRATION_PLAN_FILE_CONTENTS: ${{ secrets.MIGRATION_PLAN_FILE_CONTENTS }}
 jobs:
   Migrate-WordPress-To-Storyblok:
     runs-on: ubuntu-22.04
@@ -27,6 +26,11 @@ jobs:
           npm run fetch-tablepress-tables
       - name: Create migration plan file from secret
         run: |
-          echo $MIGRATION_PLAN_FILE_CONTENTS > migration_plan.csv
+          echo ${{ secrets.MIGRATION_PLAN_FILE_CONTENTS }} > migration_plan.csv
+      - name: Fetch media JSON
+        run: |
+          npm run fetch-media-json
+      - run: |
+          cat media.json
       - run: |
           cat migration_plan.csv
