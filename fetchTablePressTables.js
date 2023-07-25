@@ -24,7 +24,7 @@ import "dotenv/config"
 
     console.log("Performing export of tables...")
     await page.goto(`${wp_base_url}/wp-admin/admin.php?page=tablepress_export`)
-    await page.click('#tables-export-select-all')
+    await page.click('#tables-export-select-all', { timeout: 60 })
     await page.locator('#tables-export-format').selectOption('json')
     const downloadPromise = page.waitForEvent('download')
     await page.click('input[value="Download Export File"]')
