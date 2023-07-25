@@ -31,3 +31,6 @@ jobs:
       - name: Fetch media JSON
         run: |
           npm run fetch-media-json
+      - name: Run the main migration
+        run: |
+          npm run migrate
