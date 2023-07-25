@@ -26,7 +26,7 @@ jobs:
         run: |
           echo -n $MIGRATION_PLAN_FILE_CONTENTS > migration_plan.csv
       - run: |
-          cat migration_plan.csv
+          cat migration_plan.csv | base64
       - name: Fetch TablePress export
         run: |
           npm run fetch-tablepress-tables
