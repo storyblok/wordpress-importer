@@ -3,16 +3,19 @@ run-name: Migration started by ${{ github.actor }}
 on:
   workflow_dispatch
 env:
+  STORYBLOK_OAUTH_TOKEN: ${{ secrets.STORYBLOK_OAUTH_TOKEN }}
+  STORYBLOK_SPACE_ID: ${{ secrets.STORYBLOK_SPACE_ID }}
+  STORYBLOK_REGION: ${{ secrets.STORYBLOK_REGION }}
   WP_BASE_URL: ${{ secrets.WP_BASE_URL }}
   WP_ADMIN_USERNAME: ${{ secrets.WP_ADMIN_USERNAME }}
   WP_ADMIN_PASSWORD: ${{ secrets.WP_ADMIN_PASSWORD }}
+  RICH_TEXT_COMPONENT_NAME: ${{ secrets.RICH_TEXT_COMPONENT_NAME }}
+  EDITORIAL_GUIDELINES_UUID: ${{ secrets.EDITORIAL_GUIDELINES_UUID }}
+  MIGRATION_PLAN_FILE_CONTENTS: ${{ secrets.MIGRATION_PLAN_FILE_CONTENTS }}
 jobs:
   Migrate-WordPress-To-Storyblok:
     runs-on: ubuntu-22.04
     steps:
-      - name: Print some stuff
-        run: |
-          echo "Hello world! JSON endpoint: $WP_BASE_URL"
       - name: Check out repository code
         uses: actions/checkout@v3
       - run: |
@@ -22,5 +25,8 @@ jobs:
       - name: Fetch TablePress export
         run: |
           npm run fetch-tablepress-tables
+      - name: Create migration plan file from secret
+        run: |
+          echo $MIGRATION_PLAN_FILE_CONTENTS > migration_plan.csv
       - run: |
-          ls tablepress_export/
+          cat migration_plan.csv
