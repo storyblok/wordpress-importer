@@ -25,6 +25,8 @@ jobs:
       - name: Create migration plan file from secret
         run: |
           echo $MIGRATION_PLAN_FILE_CONTENTS > migration_plan.csv
+      - run: |
+          cat migration_plan.csv
       - name: Fetch TablePress export
         run: |
           npm run fetch-tablepress-tables
