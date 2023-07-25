@@ -1,14 +1,11 @@
 name: Migrate
 run-name: Migration started by ${{ github.actor }}
 on:
-  workflow_dispatch:
-    inputs:
-      wp_base_url:
-        description: 'WordPress Base URL, no trailing slash'
-        required: true
-        type: string
+  workflow_dispatch
 env:
-  WP_BASE_URL: ${{ inputs.wp_base_url }}
+  WP_BASE_URL: ${{ secrets.WP_BASE_URL }}
+  WP_ADMIN_USERNAME: ${{ secrets.WP_ADMIN_USERNAME }}
+  WP_ADMIN_PASSWORD: ${{ secrets.WP_ADMIN_PASSWORD }}
 jobs:
   Migrate-WordPress-To-Storyblok:
     runs-on: ubuntu-22.04
@@ -25,3 +22,5 @@ jobs:
       - name: Fetch TablePress export
         run: |
           npm run fetch-tablepress-tables
+      - run: |
+          ls tablepress_export/
