@@ -23,8 +23,6 @@ jobs:
         with:
           node-version-file: '.node-version'
       - run: |
-          node --version
-      - run: |
           npm install
       - name: Create migration plan file from secret
         run: |
