@@ -1,4 +1,4 @@
-import { chromium } from 'playwright'
+import playwright from 'playwright'
 import path from 'path'
 import fs from 'fs/promises'
 import decompress from 'decompress'
@@ -10,18 +10,33 @@ import "dotenv/config"
     await fs.rm(downloadsPath, { recursive: true, force: true })
 
     console.log("Launching headless browser...")
-    const browser = await chromium.launch({
+    const browser = await playwright.chromium.launch({
         headless: true,
     });
     const page = await browser.newPage()
     await page.setViewportSize({width: 1080, height: 1024})
 
     console.log("Logging in...")
-    await page.goto(`${wp_base_url}/admin`)
-    await page.type('#user_login', process.env.WP_ADMIN_USERNAME)
-    await page.type('#user_pass', process.env.WP_ADMIN_PASSWORD)
-    await page.click('#wp-submit')
-    await page.waitForURL(`${wp_base_url}/wp-admin/`)
+    let loggedIn = false
+    let attempts = 0
+    while (!loggedIn && attempts < 10) {  // Logging in fails about half the time for an unknown reason
+        await page.goto(`${wp_base_url}/admin`)
+        await page.type('#user_login', process.env.WP_ADMIN_USERNAME)
+        await page.type('#user_pass', process.env.WP_ADMIN_PASSWORD)
+        await page.click('#wp-submit')
+        try {
+            await page.waitForURL(`${wp_base_url}/wp-admin/`)
+            loggedIn = true
+        } catch (error) {
+            // Ignore timeout errors, re-throw others
+            if (error instanceof playwright.errors.TimeoutError) {
+                console.warn("Logging in did not work this time...")
+            } else {
+                throw error
+            }
+        }
+        attempts++
+    }
 
     console.log("Performing export of tables...")
     await page.goto(`${wp_base_url}/wp-admin/admin.php?page=tablepress_export`)
