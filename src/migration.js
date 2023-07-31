@@ -106,9 +106,18 @@ export default class Wp2Storyblok {
         const wp_entry = this.wp.content_types[content_type.name][j]
         // If a folder is set as destination of the stories, update the link property from WP to have
         // the new folder in it
-        if (content_type.folder) {
+        const content_type_folder = content_type.folder
+        if (content_type_folder) {
+          let folder
+          if (typeof content_type_folder === "string") {
+            folder = content_type_folder
+          } else if (typeof content_type_folder === 'function') {
+            folder = content_type_folder(wp_entry)
+          } else {
+            throw "Expected string or function for 'folder'"
+          }
           const entry_url = new URL(wp_entry.link)
-          wp_entry.link = wp_entry.link.replace(entry_url.origin, `${entry_url.origin}/${content_type.folder.replace(/^\//, '').replace(/\/$/, '')}`)
+          wp_entry.link = wp_entry.link.replace(entry_url.origin, `${entry_url.origin}/${folder.replace(/^\//, '').replace(/\/$/, '')}`)
         }
         // Basic data object for Storyblok
         // Temporary properties for managing folders of imported content

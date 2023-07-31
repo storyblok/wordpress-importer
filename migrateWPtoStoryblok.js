@@ -28,6 +28,8 @@ const old_slug_to_data = records.map(record => {
     const oldSlug = oldUrlParts[oldUrlParts.length - 2]
     const newUrlParts = record[1].split('/')
     const newSlug = newUrlParts[newUrlParts.length - 2]
+    const newFolderParts = newUrlParts.slice(3, newUrlParts.length - 2)
+    const newFolder = `/${newFolderParts.join('/')}/`
     const title = record[2].replace(' | EnergySage', '')
     const description = record[3]
     return [
@@ -35,12 +37,14 @@ const old_slug_to_data = records.map(record => {
         newSlug,
         title,
         description,
+        newFolder,
     ]
 }).reduce((result, record) => {
     result[record[0]] = {
         newSlug: record[1],
         title: record[2],
         description: record[3],
+        folder: record[4],
     }
     return result
 }, {})
@@ -314,6 +318,11 @@ const getArticleToc = (data) => {
     }]
 }
 
+const getFolder = (wp_entry) => {
+    const entryData = old_slug_to_data[wp_entry.slug]
+    return entryData.folder
+}
+
 const wp2storyblok = new Wp2Storyblok(`${process.env.WP_BASE_URL}/wp-json`, slugs, {
     token: process.env.STORYBLOK_OAUTH_TOKEN, // My Account > Personal access tokens
     space_id: process.env.STORYBLOK_SPACE_ID, // Settings
@@ -369,7 +378,7 @@ const wp2storyblok = new Wp2Storyblok(`${process.env.WP_BASE_URL}/wp-json`, slug
         {
             name: 'posts', // Post type name in WP
             new_content_type: 'ArticlePage001', // Content Type name in Storyblok
-            folder: '/blog/', // Destination folder name in Storyblok
+            folder: getFolder,
             schema_mapping: new Map([
                 ["date", "first_published_at"],
                 [getTitle, "name"],
