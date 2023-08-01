@@ -206,11 +206,15 @@ export default class Storyblok {
     let created_folders = []
     const links = await this.getLinks()
     for (let i = 0; i < folders.length; i++) {
+      let path = `${folders[i].slug}/`
+      if (folders[i].path.split('/').length < 4) {  // In this case we're only one folder level deep
+        path = `/${path}`
+      }
       let payload = {
         story: {
           name: folders[i].name,
           slug: folders[i].slug,
-          path: `/${folders[i].slug}/`,
+          path: path,
           is_folder: true
         }
       }
