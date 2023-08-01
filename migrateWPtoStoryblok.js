@@ -180,6 +180,17 @@ const getSeoData = (data) => {
     }
 }
 
+export const slugToTitle = (slug) => {
+    if (!slug) {
+        return ''
+    }
+
+    const words = slug.split('-')
+    const title = words.map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
+
+    return title
+}
+
 const getArticleBreadcrumbList = (data) => {
     const folders = old_slug_to_data[data.slug].folder.split('/')
     const innerBreadcrumbs = []
@@ -188,7 +199,7 @@ const getArticleBreadcrumbList = (data) => {
         const fullPath = `/${folders.slice(1, i + 1).join('/')}/`
         innerBreadcrumbs.push({
             component: 'ArticleBreadcrumb',
-            name: folder,
+            name: slugToTitle(folder),
             url: {
                 url: fullPath,
                 linktype: 'url',
