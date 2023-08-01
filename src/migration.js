@@ -4,6 +4,7 @@ import Storyblok from './storyblok.js'
 import { compareSlugs } from './utils.js'
 import Wp from './wp.js'
 import {convert} from "html-to-text";
+import {slugToTitle} from "../migrateWPtoStoryblok.js";
 const { markdownToRichtext } = pkg
 
 export const turndownService = new TurndownService()
@@ -106,9 +107,18 @@ export default class Wp2Storyblok {
         const wp_entry = this.wp.content_types[content_type.name][j]
         // If a folder is set as destination of the stories, update the link property from WP to have
         // the new folder in it
-        if (content_type.folder) {
+        const content_type_folder = content_type.folder
+        if (content_type_folder) {
+          let folder
+          if (typeof content_type_folder === "string") {
+            folder = content_type_folder
+          } else if (typeof content_type_folder === 'function') {
+            folder = content_type_folder(wp_entry)
+          } else {
+            throw "Expected string or function for 'folder'"
+          }
           const entry_url = new URL(wp_entry.link)
-          wp_entry.link = wp_entry.link.replace(entry_url.origin, `${entry_url.origin}/${content_type.folder.replace(/^\//, '').replace(/\/$/, '')}`)
+          wp_entry.link = wp_entry.link.replace(entry_url.origin, `${entry_url.origin}/${folder.replace(/^\//, '').replace(/\/$/, '')}`)
         }
         // Basic data object for Storyblok
         // Temporary properties for managing folders of imported content
@@ -134,7 +144,7 @@ export default class Wp2Storyblok {
           // If the folder of the current file is not yet in the list of the ones to migrate, it gets added
           if (!this.folders_to_migrate.find(f => f.path === sb_entry['_wp_folder']) && !sb_links.folders.find(f => compareSlugs(f.slug, sb_entry['_wp_folder']))) {
             const folder_slug = sb_entry['_wp_folder'].split('/')[sb_entry['_wp_folder'].split('/').length - 2]
-            this.folders_to_migrate.push({ path: sb_entry['_wp_folder'], name: folder_slug.replace(/-_/g, ' '), slug: folder_slug })
+            this.folders_to_migrate.push({ path: sb_entry['_wp_folder'], name: slugToTitle(folder_slug), slug: folder_slug })
           }
         } catch (err) {
           console.log(`Invalid URL for entry ${sb_entry.name}`)
@@ -215,7 +225,7 @@ export default class Wp2Storyblok {
           const folder_slug = this.folders_to_migrate[j].parent.split('/')[this.folders_to_migrate[j].parent.split('/').length - 2]
           this.folders_to_migrate.push({
             path: this.folders_to_migrate[j].parent,
-            name: folder_slug,
+            name: slugToTitle(folder_slug),
             slug: folder_slug
           })
         }

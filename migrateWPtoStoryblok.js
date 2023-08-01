@@ -23,24 +23,20 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const filePath = path.join(__dirname, 'migration_plan.csv');
 const data = fs.readFileSync(filePath, 'utf-8');
 const records = parse(data)
-const old_slug_to_data = records.map(record => {
+const old_slug_to_data = records.reduce((result, record) => {
     const oldUrlParts = record[0].split('/')
     const oldSlug = oldUrlParts[oldUrlParts.length - 2]
     const newUrlParts = record[1].split('/')
     const newSlug = newUrlParts[newUrlParts.length - 2]
+    const newFolderParts = newUrlParts.slice(3, newUrlParts.length - 2)
+    const folder = `/${newFolderParts.join('/')}/`
     const title = record[2].replace(' | EnergySage', '')
     const description = record[3]
-    return [
-        oldSlug,
+    result[oldSlug] = {
         newSlug,
         title,
         description,
-    ]
-}).reduce((result, record) => {
-    result[record[0]] = {
-        newSlug: record[1],
-        title: record[2],
-        description: record[3],
+        folder,
     }
     return result
 }, {})
@@ -148,7 +144,7 @@ const getTitle = (data) => {
 }
 
 const getPath = (data) => {
-    return `/blog/${data.slug}/`
+    return `${old_slug_to_data[data.slug].folder}${data.slug}/`
 }
 
 const getRealPath = (data) => {
@@ -172,11 +168,38 @@ const getSeoData = (data) => {
         'description': description,
         'og_title': title,
         'og_description': description,
-        'og_image': data.yoast_head_json.og_image.map(entry => entry.url),
+        'og_image': data.yoast_head_json.og_image?.map(entry => entry.url),
     }
 }
 
+export const slugToTitle = (slug) => {
+    if (!slug) {
+        return ''
+    }
+
+    const words = slug.split('-')
+    const title = words.map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
+
+    return title
+}
+
 const getArticleBreadcrumbList = (data) => {
+    const folders = old_slug_to_data[data.slug].folder.split('/')
+    const innerBreadcrumbs = []
+    for (let i = 1; i < folders.length - 1; i++) {
+        const folder = folders[i]
+        const fullPath = `/${folders.slice(1, i + 1).join('/')}/`
+        innerBreadcrumbs.push({
+            component: 'ArticleBreadcrumb',
+            name: slugToTitle(folder),
+            url: {
+                url: fullPath,
+                linktype: 'url',
+                fieldtype: 'multilink',
+                cached_url: fullPath,
+            },
+        })
+    }
     return [{
         component: 'ArticleBreadcrumbList',
         breadcrumbList: [
@@ -190,24 +213,15 @@ const getArticleBreadcrumbList = (data) => {
                     cached_url: '/',
                 },
             },
-            {
-                component: 'ArticleBreadcrumb',
-                name: 'Blog',
-                url: {
-                    url: '/blog/',
-                    linktype: 'url',
-                    fieldtype: 'multilink',
-                    cached_url: '/blog/',
-                },
-            },
+            ...innerBreadcrumbs,
             {
                 component: 'ArticleBreadcrumb',
                 name: old_slug_to_data[data.slug].title,
                 url: {
-                    url: `/${getPath(data)}`,
+                    url: getPath(data),
                     linktype: 'url',
                     fieldtype: 'multilink',
-                    cached_url: `/${getPath(data)}`,
+                    cached_url: getPath(data),
                 }
             },
         ],
@@ -314,6 +328,11 @@ const getArticleToc = (data) => {
     }]
 }
 
+const getFolder = (wp_entry) => {
+    const entryData = old_slug_to_data[wp_entry.slug]
+    return entryData.folder
+}
+
 const wp2storyblok = new Wp2Storyblok(`${process.env.WP_BASE_URL}/wp-json`, slugs, {
     token: process.env.STORYBLOK_OAUTH_TOKEN, // My Account > Personal access tokens
     space_id: process.env.STORYBLOK_SPACE_ID, // Settings
@@ -369,7 +388,7 @@ const wp2storyblok = new Wp2Storyblok(`${process.env.WP_BASE_URL}/wp-json`, slug
         {
             name: 'posts', // Post type name in WP
             new_content_type: 'ArticlePage001', // Content Type name in Storyblok
-            folder: '/blog/', // Destination folder name in Storyblok
+            folder: getFolder,
             schema_mapping: new Map([
                 ["date", "first_published_at"],
                 [getTitle, "name"],
