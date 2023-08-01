@@ -168,7 +168,7 @@ const getSeoData = (data) => {
         'description': description,
         'og_title': title,
         'og_description': description,
-        'og_image': data.yoast_head_json.og_image.map(entry => entry.url),
+        'og_image': data.yoast_head_json.og_image?.map(entry => entry.url),
     }
 }
 
