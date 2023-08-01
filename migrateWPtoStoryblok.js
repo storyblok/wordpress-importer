@@ -152,7 +152,7 @@ const getTitle = (data) => {
 }
 
 const getPath = (data) => {
-    return `/blog/${data.slug}/`
+    return `${old_slug_to_data[data.slug].folder}${data.slug}/`
 }
 
 const getRealPath = (data) => {
@@ -181,6 +181,22 @@ const getSeoData = (data) => {
 }
 
 const getArticleBreadcrumbList = (data) => {
+    const folders = old_slug_to_data[data.slug].folder.split('/')
+    const innerBreadcrumbs = []
+    for (let i = 1; i < folders.length - 1; i++) {
+        const folder = folders[i]
+        const fullPath = `/${folders.slice(1, i + 1).join('/')}/`
+        innerBreadcrumbs.push({
+            component: 'ArticleBreadcrumb',
+            name: folder,
+            url: {
+                url: fullPath,
+                linktype: 'url',
+                fieldtype: 'multilink',
+                cached_url: fullPath,
+            },
+        })
+    }
     return [{
         component: 'ArticleBreadcrumbList',
         breadcrumbList: [
@@ -194,24 +210,15 @@ const getArticleBreadcrumbList = (data) => {
                     cached_url: '/',
                 },
             },
-            {
-                component: 'ArticleBreadcrumb',
-                name: 'Blog',
-                url: {
-                    url: '/blog/',
-                    linktype: 'url',
-                    fieldtype: 'multilink',
-                    cached_url: '/blog/',
-                },
-            },
+            ...innerBreadcrumbs,
             {
                 component: 'ArticleBreadcrumb',
                 name: old_slug_to_data[data.slug].title,
                 url: {
-                    url: `/${getPath(data)}`,
+                    url: getPath(data),
                     linktype: 'url',
                     fieldtype: 'multilink',
-                    cached_url: `/${getPath(data)}`,
+                    cached_url: getPath(data),
                 }
             },
         ],
