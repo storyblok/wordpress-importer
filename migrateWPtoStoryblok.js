@@ -23,28 +23,20 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const filePath = path.join(__dirname, 'migration_plan.csv');
 const data = fs.readFileSync(filePath, 'utf-8');
 const records = parse(data)
-const old_slug_to_data = records.map(record => {
+const old_slug_to_data = records.reduce((result, record) => {
     const oldUrlParts = record[0].split('/')
     const oldSlug = oldUrlParts[oldUrlParts.length - 2]
     const newUrlParts = record[1].split('/')
     const newSlug = newUrlParts[newUrlParts.length - 2]
     const newFolderParts = newUrlParts.slice(3, newUrlParts.length - 2)
-    const newFolder = `/${newFolderParts.join('/')}/`
+    const folder = `/${newFolderParts.join('/')}/`
     const title = record[2].replace(' | EnergySage', '')
     const description = record[3]
-    return [
-        oldSlug,
+    result[oldSlug] = {
         newSlug,
         title,
         description,
-        newFolder,
-    ]
-}).reduce((result, record) => {
-    result[record[0]] = {
-        newSlug: record[1],
-        title: record[2],
-        description: record[3],
-        folder: record[4],
+        folder,
     }
     return result
 }, {})
