@@ -192,21 +192,21 @@ export const slugToSentenceCaseTitle = (slug) => {
 }
 
 function convertToSentenceCase(title) {
-    const capitalizeFirstWord = (word) => {
-        return word.charAt(0).toUpperCase() + word.slice(1);
+    const capitalizeFirstLetterOnly = (word) => {
+        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
     };
 
     const words = title.split(" ");
     const sentenceCaseTitle = [];
 
     if (words.length > 0) {
-        sentenceCaseTitle.push(capitalizeFirstWord(words[0]));
+        sentenceCaseTitle.push(capitalizeFirstLetterOnly(words[0]));
     }
 
     for (let i = 1; i < words.length; i++) {
         let word = words[i]
         if (words[i - 1].endsWith(':')) {
-            word = capitalizeFirstWord(word)
+            word = capitalizeFirstLetterOnly(word)
         } else {
             word = word.toLowerCase()
         }
