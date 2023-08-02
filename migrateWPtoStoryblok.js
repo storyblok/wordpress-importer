@@ -205,7 +205,9 @@ function convertToSentenceCase(title) {
 
     for (let i = 1; i < words.length; i++) {
         let word = words[i]
-        if (!words[i - 1].endsWith(':')) {
+        if (words[i - 1].endsWith(':')) {
+            word = capitalizeFirstWord(word)
+        } else {
             word = word.toLowerCase()
         }
         sentenceCaseTitle.push(word);
