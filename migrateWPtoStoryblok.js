@@ -139,8 +139,12 @@ const handleImage = (block) => {
     }
 }
 
-const getTitle = (data) => {
-    return old_slug_to_data[data.slug].title
+const getTitle = (data, sentenceCase = true) => {
+    let title = old_slug_to_data[data.slug].title
+    if (sentenceCase) {
+        title = convertToSentenceCase(title)
+    }
+    return title
 }
 
 const getPath = (data) => {
@@ -152,7 +156,7 @@ const getRealPath = (data) => {
 }
 
 const getSeoData = (data) => {
-    const title = old_slug_to_data[data.slug].title
+    const title = getTitle(data, false)
     const descriptionFromPlan = old_slug_to_data[data.slug].description
     const description = (descriptionFromPlan && descriptionFromPlan !== '-') ? descriptionFromPlan
         : data.yoast_head_json.description
@@ -172,15 +176,44 @@ const getSeoData = (data) => {
     }
 }
 
-export const slugToTitle = (slug) => {
-    if (!slug) {
-        return ''
+export const slugToSentenceCaseTitle = (slug) => {
+    const words = slug.split("-");
+    const sentenceCaseWords = words.map((word, index) => {
+        let firstLetter = word.charAt(0)
+        if (index === 0) {
+            firstLetter = firstLetter.toUpperCase()
+        } else {
+            firstLetter = firstLetter.toLowerCase()
+        }
+        return firstLetter + word.slice(1).toLowerCase();
+    });
+
+    return sentenceCaseWords.join(" ");
+}
+
+function convertToSentenceCase(title) {
+    const capitalizeFirstLetterOnly = (word) => {
+        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    };
+
+    const words = title.split(" ");
+    const sentenceCaseTitle = [];
+
+    if (words.length > 0) {
+        sentenceCaseTitle.push(capitalizeFirstLetterOnly(words[0]));
     }
 
-    const words = slug.split('-')
-    const title = words.map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
+    for (let i = 1; i < words.length; i++) {
+        let word = words[i]
+        if (words[i - 1].endsWith(':')) {
+            word = capitalizeFirstLetterOnly(word)
+        } else {
+            word = word.toLowerCase()
+        }
+        sentenceCaseTitle.push(word);
+    }
 
-    return title
+    return sentenceCaseTitle.join(" ");
 }
 
 const getArticleBreadcrumbList = (data) => {
@@ -191,7 +224,7 @@ const getArticleBreadcrumbList = (data) => {
         const fullPath = `/${folders.slice(1, i + 1).join('/')}/`
         innerBreadcrumbs.push({
             component: 'ArticleBreadcrumb',
-            name: slugToTitle(folder),
+            name: slugToSentenceCaseTitle(folder),
             url: {
                 url: fullPath,
                 linktype: 'url',
@@ -216,7 +249,7 @@ const getArticleBreadcrumbList = (data) => {
             ...innerBreadcrumbs,
             {
                 component: 'ArticleBreadcrumb',
-                name: old_slug_to_data[data.slug].title,
+                name: getTitle(data, true),
                 url: {
                     url: getPath(data),
                     linktype: 'url',
@@ -297,7 +330,7 @@ const getArticleEeat = async (data) => {
 
     return [{
         component: 'ArticleEeat',
-        header: old_slug_to_data[data.slug].title,
+        header: getTitle(data, true),
         authors: authorUuid ? [authorUuid] : [],
         // This has been removed from Storyblok temporarily(?)
         // editorialGuidelines: process.env.EDITORIAL_GUIDELINES_UUID,
