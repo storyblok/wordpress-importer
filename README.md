@@ -15,7 +15,7 @@ Create a version of it that contains only the rows
 of the articles you want to migrate.
 It should have 4 columns, with no column headers:
 
-- Current page
+- Current page URL
 - Final URL destination
 - Final URL title tag
 - Final URL meta description
