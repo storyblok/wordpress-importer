@@ -247,16 +247,6 @@ const getArticleBreadcrumbList = (data) => {
                 },
             },
             ...innerBreadcrumbs,
-            {
-                component: 'ArticleBreadcrumb',
-                name: getTitle(data, true),
-                url: {
-                    url: getPath(data),
-                    linktype: 'url',
-                    fieldtype: 'multilink',
-                    cached_url: getPath(data),
-                }
-            },
         ],
     }]
 }
