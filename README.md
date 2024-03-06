@@ -81,7 +81,8 @@ wp2storyblok.migrate()
 **Parameters**
 
 - `endpoint` String, The main endpoint for the WordPress REST API, without the `/wp/v2/` part
-- `config` Object
+- `settings` Object
+  - (`region` String, Optional, The region of your Storyblok space. Default is `eu`) 
   - `token` String, The oauth token for the management API that can be retrieved in the account section of https://app.storyblok.com
   - `space_id` Integer, The id of your space
   - `content_types` Array of Objects
