@@ -192,7 +192,7 @@ export default class Storyblok {
         },
         () => {
           if (fs.existsSync("./temp")) {
-            fs.rmSync("./temp", { recursive: true });
+            fs.rmSync("./temp", { recursive: true, force: true });
           }
           if (this.assets?.length > 0) {
             console.log(`Uploaded ${this.assets.length} assets`);
