@@ -62,8 +62,13 @@ export default class Wp {
     } else if (typeof field_value === 'object' && field_value.rendered) {
       return field_value.rendered
     } else if (typeof field_value === 'object' && field_value.href) {
-      const link = await axios.get(field_value.href)
-      return link.data?.source_url
+      try {
+        const link = await axios.get(field_value.href)
+        return link.data?.source_url
+      } catch(err) {
+        console.log(`Error while trying to fetch ${field_value.href}`);
+        return null;
+      }
     } else if(field === 'blocks') {
       return field_value
     }

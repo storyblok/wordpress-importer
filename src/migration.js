@@ -8,6 +8,7 @@ const { markdownToRichtext } = pkg
 const turndownService = new TurndownService()
 
 const settings_defaults = {
+  region: 'eu',
   import_assets: {
     enabled: true,
     types: ['png', 'jpg', 'jpeg', 'gif', 'png', 'svg', 'pdf'],
@@ -23,7 +24,7 @@ export default class Wp2Storyblok {
     this.settings = { ...settings_defaults, ...settings }
     // Storyblok and WP Interfaces
     this.wp = new Wp({endpoint: this.endpoint})
-    this.storyblok = new Storyblok({ token: settings.token, space_id: settings.space_id })
+    this.storyblok = new Storyblok({ token: settings.token, space_id: settings.space_id, region: settings.region })
     // Data to migrate
     this.stories_to_migrate = []
     this.assets_to_migrate = []
