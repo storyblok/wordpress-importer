@@ -124,7 +124,7 @@ In case you want a field to be migrated as content inside a nested block in a fi
 ```
 
 #### WordPress Blocks Mapping
-You can import blocks created with Gutenber as components in Storyblok. To achieve this you need to install the [REST API blocks plugin](https://wordpress.org/plugins/rest-api-blocks/) and fill out the `blocks_mapping` property in the migration settings.
+You can import blocks created with Gutenberg as components in Storyblok. To achieve this you need to install the [REST API blocks plugin](https://wordpress.org/plugins/rest-api-blocks/) and fill out the `blocks_mapping` property in the migration settings.
 You need to create an array of objects where you specify the name of the block from Gutenberg (called `blockName` in the REST API), the name of the component in Storyblok and then the schema mapping in the same format as for the content types. 
 The blocks from Gutenberg are returned by the REST API inside the main object of an entry in a property called `blocks`. 
 
